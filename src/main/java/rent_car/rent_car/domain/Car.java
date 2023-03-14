@@ -1,4 +1,4 @@
-package rentcar.rentcar.domain;
+package rent_car.rent_car.domain;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "cars")
 public class Car {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "c_seq")
     @SequenceGenerator(name = "c_seq", sequenceName = "cars_s", allocationSize = 1)
     private int id;
 

@@ -1,4 +1,4 @@
-package rentcar.rentcar.controller;
+package rent_car.rent_car.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-import rentcar.rentcar.domain.User;
-import rentcar.rentcar.service.UserService;
+import rent_car.rent_car.domain.User;
+import rent_car.rent_car.service.UserService;
 
 import java.util.ArrayList;
 

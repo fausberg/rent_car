@@ -1,9 +1,9 @@
-package rentcar.rentcar.service;
+package rent_car.rent_car.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rentcar.rentcar.domain.RentHistory;
-import rentcar.rentcar.repository.RentHistoryRepository;
+import rent_car.rent_car.domain.RentHistory;
+import rent_car.rent_car.repository.RentHistoryRepository;
 
 import java.util.ArrayList;
 
@@ -18,22 +18,22 @@ public class RentHistoryService {
     }
 
     public RentHistory getRentHistoryById(int id) {
-        return rentHistoryRepository.getRentHistoryById(id);
+        return rentHistoryRepository.findById(id).get();
     }
 
     public ArrayList<RentHistory> getAllRentHistory() {
-        return rentHistoryRepository.getAllRentHistory();
+        return (ArrayList<RentHistory>) rentHistoryRepository.findAll();
     }
 
     public void createRentHistory(RentHistory rentHistory) {
-        rentHistoryRepository.createRentHistory(rentHistory);
+        rentHistoryRepository.save(rentHistory);
     }
 
     public void updateRentHistory(RentHistory rentHistory) {
-        rentHistoryRepository.updateRentHistory(rentHistory);
+        rentHistoryRepository.saveAndFlush(rentHistory);
     }
 
     public void deleteRentHistory(RentHistory rentHistory) {
-        rentHistoryRepository.deleteRentHistory(rentHistory);
+        rentHistoryRepository.delete(rentHistory);
     }
 }

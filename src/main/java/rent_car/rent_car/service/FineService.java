@@ -1,9 +1,9 @@
-package rentcar.rentcar.service;
+package rent_car.rent_car.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rentcar.rentcar.domain.Fine;
-import rentcar.rentcar.repository.FineRepository;
+import rent_car.rent_car.domain.Fine;
+import rent_car.rent_car.repository.FineRepository;
 
 import java.util.ArrayList;
 
@@ -18,22 +18,22 @@ public class FineService {
     }
 
     public Fine getFineById(int id) {
-        return fineRepository.getFineById(id);
+        return fineRepository.findById(id).get();
     }
 
     public ArrayList<Fine> getAllFine() {
-        return fineRepository.getAllFine();
+        return (ArrayList<Fine>) fineRepository.findAll();
     }
 
     public void createFine(Fine fine) {
-        fineRepository.createFine(fine);
+        fineRepository.save(fine);
     }
 
     public void updateFine(Fine fine) {
-        fineRepository.updateFine(fine);
+        fineRepository.saveAndFlush(fine);
     }
 
     public void deleteFine(Fine fine) {
-        fineRepository.deleteFine(fine);
+        fineRepository.delete(fine);
     }
 }

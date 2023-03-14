@@ -1,9 +1,9 @@
-package rentcar.rentcar.service;
+package rent_car.rent_car.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rentcar.rentcar.domain.DriverLicence;
-import rentcar.rentcar.repository.DriverLicenceRepository;
+import rent_car.rent_car.domain.DriverLicence;
+import rent_car.rent_car.repository.DriverLicenceRepository;
 
 import java.util.ArrayList;
 
@@ -18,22 +18,22 @@ public class DriverLicenceService {
     }
 
     public DriverLicence getDriverLicenceById(int id) {
-        return driverLicenceRepository.getDriverLicenceById(id);
+        return driverLicenceRepository.findById(id).get();
     }
 
     public ArrayList<DriverLicence> getAllDriverLicence() {
-        return driverLicenceRepository.getAllDriverLicence();
+        return (ArrayList<DriverLicence>) driverLicenceRepository.findAll();
     }
 
     public void createDriverLicence(DriverLicence driverLicence) {
-        driverLicenceRepository.createDriverLicence(driverLicence);
+        driverLicenceRepository.save(driverLicence);
     }
 
     public void updateDriverLicence(DriverLicence driverLicence) {
-        driverLicenceRepository.updateDriverLicence(driverLicence);
+        driverLicenceRepository.saveAndFlush(driverLicence);
     }
 
     public void deleteDriverLicence(DriverLicence driverLicence) {
-        driverLicenceRepository.deleteDriverLicence(driverLicence);
+        driverLicenceRepository.delete(driverLicence);
     }
 }

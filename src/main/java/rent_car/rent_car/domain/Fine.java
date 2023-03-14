@@ -1,4 +1,4 @@
-package rentcar.rentcar.domain;
+package rent_car.rent_car.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
@@ -12,7 +12,7 @@ import java.util.Collection;
 @Table(name = "fines")
 public class Fine {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "f_seq")
     @SequenceGenerator(name = "f_seq", sequenceName = "fines_s",allocationSize = 1)
     private int id;
 
@@ -25,11 +25,6 @@ public class Fine {
     @Column(name = "description")
     private String description;
 
-    @JsonManagedReference
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "fines")
-    private Collection<User> user;
 
-//    @Column(name = "car_id")
-//    private Car car;
 
 }

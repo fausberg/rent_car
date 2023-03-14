@@ -1,4 +1,4 @@
-package rentcar.rentcar.domain;
+package rent_car.rent_car.domain;
 
 import lombok.Data;
 
@@ -10,15 +10,10 @@ import java.time.LocalDate;
 @Table(name = "rent_historyes")
 public class RentHistory {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "rh_seq")
     @SequenceGenerator(name = "rh_seq", sequenceName = "rent_history_s", allocationSize = 1)
     private int id;
 
-//    @Column(name = "car_id")
-//    private Car car;
-//
-//    @Column(name = "user_id")
-//    private  User user;
 
     @Column(name = "start")
     private LocalDate start;

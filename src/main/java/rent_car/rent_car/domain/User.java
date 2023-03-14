@@ -1,4 +1,4 @@
-package rentcar.rentcar.domain;
+package rent_car.rent_car.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "u_seq")
     @SequenceGenerator(name = "u_seq", sequenceName = "users_s", allocationSize = 1)
     private int id;
 
@@ -33,14 +33,5 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @JsonManagedReference
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "driver_license_id")
-    private DriverLicence driverLicence;
-
-    @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name = "fine_id", nullable = false)
-    private Fine fines;
 
 }

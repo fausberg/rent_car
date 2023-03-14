@@ -1,9 +1,9 @@
-package rentcar.rentcar.service;
+package rent_car.rent_car.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rentcar.rentcar.domain.Car;
-import rentcar.rentcar.repository.CarRepository;
+import rent_car.rent_car.domain.Car;
+import rent_car.rent_car.repository.CarRepository;
 
 import java.util.ArrayList;
 
@@ -18,22 +18,22 @@ public class CarService {
     }
 
     public Car getCarById(int id) {
-        return carRepository.getCarById(id);
+        return carRepository.findById(id).get();
     }
 
     public ArrayList<Car> getAllCar() {
-        return carRepository.getAllCar();
+        return (ArrayList<Car>) carRepository.findAll();
     }
 
     public void createCar(Car car) {
-        carRepository.createCar(car);
+        carRepository.save(car);
     }
 
     public void updateCar(Car car) {
-        carRepository.updateCar(car);
+        carRepository.saveAndFlush(car);
     }
 
     public void deleteCar(Car car) {
-        carRepository.deleteCar(car);
+        carRepository.delete(car);
     }
 }

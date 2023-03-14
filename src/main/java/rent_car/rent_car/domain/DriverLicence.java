@@ -1,4 +1,4 @@
-package rentcar.rentcar.domain;
+package rent_car.rent_car.domain;
 
 import lombok.Data;
 
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Table(name = "driver_licences")
 public class DriverLicence {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "dl_seq")
     @SequenceGenerator(name = "dl_seq", sequenceName = "driver_licences_s",allocationSize = 1)
     private int id;
 
