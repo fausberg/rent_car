@@ -16,11 +16,11 @@
         <property name="show_sql">true</property>
         <property name="format_sql">true</property>
 
-        <mapping class="rent_car.rent_car.domain.User"/>
-        <mapping class="rent_car.rent_car.domain.Car"/>
-        <mapping class="rent_car.rent_car.domain.DriverLicence"/>
-        <mapping class="rent_car.rent_car.domain.Fine"/>
-        <mapping class="rent_car.rent_car.domain.RentHistory"/>
+        <mapping class="rentcar.rentcar.domain.User"/>
+        <mapping class="rentcar.rentcar.domain.Car"/>
+        <mapping class="rentcar.rentcar.domain.DriverLicence"/>
+        <mapping class="rentcar.rentcar.domain.Fine"/>
+        <mapping class="rentcar.rentcar.domain.RentHistory"/>
 
 
     </session-factory>
