@@ -10,7 +10,7 @@ import java.util.ArrayList;
 @Service
 public class FineService {
 
-    public FineRepository fineRepository;
+    private final FineRepository fineRepository;
 
     @Autowired
     public FineService(FineRepository fineRepository) {

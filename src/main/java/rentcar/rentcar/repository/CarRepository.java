@@ -18,7 +18,7 @@ public interface CarRepository extends JpaRepository<Car, Integer> {
     @Transactional
     @Modifying
     @Query(nativeQuery = true, value = "UPDATE cars SET booking = true WHERE id = :id")
-    void bookACar(Integer id);
+    void bookCar(Integer id);
 
     @Transactional
     @Modifying

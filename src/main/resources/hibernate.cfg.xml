@@ -21,6 +21,7 @@
         <mapping class="rentcar.rentcar.domain.DriverLicence"/>
         <mapping class="rentcar.rentcar.domain.Fine"/>
         <mapping class="rentcar.rentcar.domain.RentHistory"/>
+        <mapping class="rentcar.rentcar.domain.CreditCard"/>
 
 
     </session-factory>

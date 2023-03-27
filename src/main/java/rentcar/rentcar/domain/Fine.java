@@ -25,6 +25,10 @@ public class Fine {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "user_id")
+    private String userId;
 
+    @Column(name = "car_id")
+    private String carId;
 
 }

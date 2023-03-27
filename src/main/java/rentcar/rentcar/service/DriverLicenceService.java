@@ -10,7 +10,7 @@ import java.util.ArrayList;
 @Service
 public class DriverLicenceService {
 
-    public DriverLicenceRepository driverLicenceRepository;
+    private final DriverLicenceRepository driverLicenceRepository;
 
     @Autowired
     public DriverLicenceService(DriverLicenceRepository driverLicenceRepository) {

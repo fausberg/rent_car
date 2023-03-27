@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import rentcar.rentcar.domain.CreditCard;
 import rentcar.rentcar.domain.request.RegistrationUser;
 
 import java.net.http.HttpResponse;
@@ -22,8 +23,13 @@ public class SecureController {
         this.secureService = secureService;
     }
 
-    @PostMapping()
+    @PostMapping("/user")
     public ResponseEntity<HttpResponse> registrationUser(@RequestBody RegistrationUser registrationUser) {
-        return new ResponseEntity<>(secureService.registration(registrationUser) ? HttpStatus.CREATED : HttpStatus.CONFLICT);
+        return new ResponseEntity<>(secureService.registrationUser(registrationUser) ? HttpStatus.CREATED : HttpStatus.CONFLICT);
+    }
+
+    @PostMapping("/cr")
+    public ResponseEntity<HttpResponse> registrationUser(@RequestBody CreditCard creditCard) {
+        return new ResponseEntity<>(secureService.createCreditCard(creditCard) ? HttpStatus.CREATED : HttpStatus.CONFLICT);
     }
 }

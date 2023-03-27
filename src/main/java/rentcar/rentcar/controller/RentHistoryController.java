@@ -38,18 +38,6 @@ public class RentHistoryController {
         return new ResponseEntity<>(rentHistoryService.getAllRentHistory(), HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<HttpStatus> createRentHistory(@RequestBody RentHistory rentHistory, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            for (ObjectError o : bindingResult.getAllErrors()) {
-                log.warn(o.getDefaultMessage());
-            }
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
-        rentHistoryService.createRentHistory(rentHistory);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
     @PutMapping
     public ResponseEntity<HttpStatus> updareRentHistory(@RequestBody RentHistory rentHistory, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {

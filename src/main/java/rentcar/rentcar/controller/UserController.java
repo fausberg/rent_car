@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import rentcar.rentcar.domain.CreditCard;
+import rentcar.rentcar.domain.Fine;
 import rentcar.rentcar.service.UserService;
 import rentcar.rentcar.domain.User;
 
@@ -37,18 +39,6 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<HttpStatus> createUser(@RequestBody User user, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            for(ObjectError o : bindingResult.getAllErrors()) {
-                log.warn(o.getDefaultMessage());
-            }
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
-        userService.createUser(user);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
     @PutMapping
     public ResponseEntity<HttpStatus> updateUser(@RequestBody User user, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
@@ -65,5 +55,15 @@ public class UserController {
     public ResponseEntity<HttpStatus> deleteUser(@RequestBody User user) {
         userService.deleteUser(user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/cr")
+    public ResponseEntity<ArrayList<CreditCard>> getAllUserCreditCards() {
+        return new ResponseEntity<>(userService.getAllCreditCards(), HttpStatus.OK);
+    }
+
+    @GetMapping("/fine")
+    public ResponseEntity<ArrayList<Fine>> getAllUserFines() {
+        return new ResponseEntity<>(userService.getAllFines(), HttpStatus.OK);
     }
 }

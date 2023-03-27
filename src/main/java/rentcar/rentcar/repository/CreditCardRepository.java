@@ -4,12 +4,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import rentcar.rentcar.domain.CreditCard;
-import rentcar.rentcar.domain.Fine;
 
 import java.util.ArrayList;
 
 @Repository
-public interface FineRepository extends JpaRepository<Fine, Integer> {
-    @Query(nativeQuery = true, value = "SELECT * FROM fines WHERE user_id = :id")
-    ArrayList<Fine> getFinesByUserId(int id);
+public interface CreditCardRepository extends JpaRepository<CreditCard, Integer> {
+    @Query(nativeQuery = true, value = "SELECT * FROM credit_cards WHERE user_id = :id")
+    ArrayList<CreditCard> getCreditCardsByUserId(int id);
 }
