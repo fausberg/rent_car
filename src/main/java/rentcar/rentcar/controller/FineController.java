@@ -33,12 +33,12 @@ public class FineController {
         return new ResponseEntity<>(fine, fine.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
     }
 
-    @GetMapping
+    @GetMapping("all")
     public ResponseEntity<ArrayList<Fine>> getAllFines() {
         return new ResponseEntity<>(fineService.getAllFine(), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("create")
     public ResponseEntity<HttpStatus> createFine(@RequestBody Fine fine, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for(ObjectError o : bindingResult.getAllErrors()) {
@@ -50,7 +50,7 @@ public class FineController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping
+    @PutMapping("update")
     public ResponseEntity<HttpStatus> updateFine(@RequestBody Fine fine, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for(ObjectError o : bindingResult.getAllErrors()) {
@@ -62,7 +62,7 @@ public class FineController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping
+    @DeleteMapping("delete")
     public ResponseEntity<HttpStatus> deleteFine(@RequestBody Fine fine) {
         fineService.deleteFine(fine);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -33,12 +33,17 @@ public class CarController {
         return new ResponseEntity<>(car, car.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
     }
 
-    @GetMapping
+    @GetMapping("all")
     public ResponseEntity<ArrayList<Car>> getAllCars() {
         return new ResponseEntity<>(carService.getAllCar(), HttpStatus.OK);
     }
 
-    @PostMapping
+    @GetMapping("free")
+    public ResponseEntity<ArrayList<Car>> getFreeCars() {
+        return new ResponseEntity<>(carService.getFreeCar(), HttpStatus.OK);
+    }
+
+    @PostMapping("create")
     public ResponseEntity<HttpStatus> createCar(@RequestBody Car car, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for(ObjectError o : bindingResult.getAllErrors()) {
@@ -50,7 +55,7 @@ public class CarController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping
+    @PutMapping("update")
     public ResponseEntity<HttpStatus> updateCar(@RequestBody Car car, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
@@ -62,9 +67,9 @@ public class CarController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping
-    public ResponseEntity<HttpStatus> deleteCar(@RequestBody Car car) {
-        carService.deleteCar(car);
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<HttpStatus> deleteCar(@PathVariable int id) {
+        carService.deleteCar(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -74,7 +79,7 @@ public class CarController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/end")
+    @PutMapping("end")
     public ResponseEntity<HttpStatus> removeTheBookingFromTheCar() {
         carService.removeRentCar();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

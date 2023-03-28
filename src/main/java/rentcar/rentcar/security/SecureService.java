@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import rentcar.rentcar.domain.CreditCard;
 import rentcar.rentcar.domain.User;
 import rentcar.rentcar.domain.request.RegistrationUser;
+import rentcar.rentcar.exception.CardException;
 import rentcar.rentcar.exception.LoginException;
 import rentcar.rentcar.repository.CreditCardRepository;
 import rentcar.rentcar.repository.UserRepository;
@@ -48,6 +49,7 @@ public class SecureService {
             }
             User user = new User();
             user.setLogin(registrationUser.getLogin());
+            System.out.println(registrationUser);
             user.setPassword(passwordEncoder.encode(registrationUser.getPassword()));
             user.setFirstName(registrationUser.getFirstName());
             user.setLastName(registrationUser.getLastName());
@@ -65,19 +67,24 @@ public class SecureService {
         return false;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public boolean createCreditCard(CreditCard creditCard) {
         try {
+            ArrayList<String> cardNumbers = creditCardRepository.cardNumbers();
+            for(String cardNumber : cardNumbers) {
+                if(cardNumber.equals(creditCard.getCardNumber())) {
+                    throw new CardException("credit card already exists");
+                }
+            }
             User user = userService.getUserByLogin();
             System.out.println(creditCard);
-            creditCard.setDate(passwordEncoder.encode(creditCard.getDate()));
-            creditCard.setCVV(passwordEncoder.encode(creditCard.getCVV()));
+            creditCard.setDate(creditCard.getDate());
+            creditCard.setCVV(creditCard.getCVV());
             creditCard.setUserId(user.getId());
             System.out.println(creditCard);
             creditCardRepository.save(creditCard);
             return true;
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (CardException e) {
+            log.error(e.getMessage());
         }
         return false;
     }

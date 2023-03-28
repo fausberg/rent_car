@@ -27,13 +27,21 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        return http
                 .authorizeRequests()
-                .antMatchers("/registration","car/{id}").permitAll()
+                .antMatchers("car/{id}", "car/update", "car/delete/{id}", "car/create").hasRole("ADMIN")
+                .antMatchers("car/free", "car/start/{id}", "car/end").permitAll()
+                .antMatchers("cr/all", "cr/{id}").hasRole("ADMIN")
+                .antMatchers("cr/update", "cr/delete").permitAll()
+                .antMatchers("fine/**").hasRole("ADMIN")
+                .antMatchers("rh/**").hasRole("ADMIN")
+                .antMatchers("user/{id}", "user/all").hasRole("ADMIN")
+                .antMatchers("user/update", "user/delete", "user/fine", "user/cr", "user/rh").permitAll()
+                .antMatchers("registration/cr").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic();
-        return http.build();
+                .httpBasic()
+                .and().build();
     }
 
     @Bean

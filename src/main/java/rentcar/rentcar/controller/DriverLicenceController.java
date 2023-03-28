@@ -33,12 +33,12 @@ public class DriverLicenceController {
         return new ResponseEntity<>(driverLicence, driverLicence.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
     }
 
-    @GetMapping
+    @GetMapping("all")
     public ResponseEntity<ArrayList<DriverLicence>> getAllDriverLicence() {
         return new ResponseEntity<>(driverLicenceService.getAllDriverLicence(), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("create")
     public ResponseEntity<HttpStatus> createDriverLicence(@RequestBody DriverLicence driverLicence, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
@@ -50,7 +50,7 @@ public class DriverLicenceController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping
+    @PutMapping("update")
     public ResponseEntity<HttpStatus> updateDriverLicence(@RequestBody DriverLicence driverLicence, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
@@ -62,7 +62,7 @@ public class DriverLicenceController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping
+    @DeleteMapping("delete")
     public ResponseEntity<HttpStatus> deleteDriverLicence(@RequestBody DriverLicence driverLicence) {
         driverLicenceService.deleteDriverLicence(driverLicence);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

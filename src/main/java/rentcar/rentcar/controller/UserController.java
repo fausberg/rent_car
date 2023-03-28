@@ -11,6 +11,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import rentcar.rentcar.domain.CreditCard;
 import rentcar.rentcar.domain.Fine;
+import rentcar.rentcar.domain.RentHistory;
 import rentcar.rentcar.service.UserService;
 import rentcar.rentcar.domain.User;
 
@@ -34,12 +35,12 @@ public class UserController {
         return new ResponseEntity<>(user, user.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
     }
 
-    @GetMapping
+    @GetMapping("all")
     public ResponseEntity<ArrayList<User>> getAllUser() {
         return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
     }
 
-    @PutMapping
+    @PutMapping("update")
     public ResponseEntity<HttpStatus> updateUser(@RequestBody User user, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for(ObjectError o : bindingResult.getAllErrors()) {
@@ -51,7 +52,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping
+    @DeleteMapping("delete")
     public ResponseEntity<HttpStatus> deleteUser(@RequestBody User user) {
         userService.deleteUser(user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -59,11 +60,16 @@ public class UserController {
 
     @GetMapping("/cr")
     public ResponseEntity<ArrayList<CreditCard>> getAllUserCreditCards() {
-        return new ResponseEntity<>(userService.getAllCreditCards(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getAllCreditCardsByUserId(), HttpStatus.OK);
     }
 
     @GetMapping("/fine")
     public ResponseEntity<ArrayList<Fine>> getAllUserFines() {
-        return new ResponseEntity<>(userService.getAllFines(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getAllFinesByUserId(), HttpStatus.OK);
+    }
+
+    @GetMapping("/rh")
+    public ResponseEntity<ArrayList<RentHistory>> getAllRentHistoryByUserId() {
+        return new ResponseEntity<>(userService.getAllRentHistoryByUserId(), HttpStatus.OK);
     }
 }

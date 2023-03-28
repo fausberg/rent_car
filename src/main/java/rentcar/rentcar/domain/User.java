@@ -3,6 +3,10 @@ package rentcar.rentcar.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
 @Entity
@@ -14,21 +18,31 @@ public class User {
     @SequenceGenerator(name = "u_seq", sequenceName = "users_s", allocationSize = 1)
     private int id;
 
+    @NotBlank
+    @Size(max = 8)
     @Column(name = "first_name")
     private String firstName;
 
+    @NotBlank
+    @Size(max = 10)
     @Column(name = "last_name")
     private String lastName;
 
+    @NotBlank
+    @Pattern(regexp = "(\\+?375)([0-9]{9})")
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @NotBlank
+    @Email
     @Column(name = "email")
     private String email;
 
+    @NotBlank
     @Column(name = "login")
     private String login;
 
+    @NotBlank
     @Column(name = "password")
     private String password;
 

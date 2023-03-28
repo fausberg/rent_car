@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import rentcar.rentcar.domain.CreditCard;
 import rentcar.rentcar.domain.request.RegistrationUser;
 
+import javax.validation.Valid;
 import java.net.http.HttpResponse;
 
 @RestController
@@ -24,12 +25,12 @@ public class SecureController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<HttpResponse> registrationUser(@RequestBody RegistrationUser registrationUser) {
+    public ResponseEntity<HttpResponse> registrationUser(@RequestBody @Valid RegistrationUser registrationUser) {
         return new ResponseEntity<>(secureService.registrationUser(registrationUser) ? HttpStatus.CREATED : HttpStatus.CONFLICT);
     }
 
     @PostMapping("/cr")
-    public ResponseEntity<HttpResponse> registrationUser(@RequestBody CreditCard creditCard) {
+    public ResponseEntity<HttpResponse> registrationUser(@RequestBody @Valid CreditCard creditCard) {
         return new ResponseEntity<>(secureService.createCreditCard(creditCard) ? HttpStatus.CREATED : HttpStatus.CONFLICT);
     }
 }

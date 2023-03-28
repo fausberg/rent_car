@@ -33,6 +33,10 @@ public class CarService {
     }
 
     public ArrayList<Car> getAllCar() {
+        return (ArrayList<Car>) carRepository.findAll();
+    }
+
+    public ArrayList<Car> getFreeCar() {
         return carRepository.getCars();
     }
 
@@ -44,8 +48,8 @@ public class CarService {
         carRepository.saveAndFlush(car);
     }
 
-    public void deleteCar(Car car) {
-        carRepository.delete(car);
+    public void deleteCar(int id) {
+        carRepository.deleteById(id);
     }
 
     public void rentCar(Integer id) {

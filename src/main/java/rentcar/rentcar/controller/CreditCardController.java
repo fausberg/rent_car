@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +33,13 @@ public class CreditCardController {
         return new ResponseEntity<>(creditCard, creditCard.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
     }
 
-    @GetMapping
+    @GetMapping("all")
     public ResponseEntity<ArrayList<CreditCard>> getAllCreditCards() {
         return new ResponseEntity<>(creditCardService.getAllCreditCard(), HttpStatus.OK);
     }
 
-    @PutMapping
-    public ResponseEntity<HttpStatus> updateFine(@RequestBody CreditCard creditCard, BindingResult bindingResult) {
+    @PutMapping("update")
+    public ResponseEntity<HttpStatus> updateCreditCard(@RequestBody CreditCard creditCard, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for(ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
@@ -49,7 +50,7 @@ public class CreditCardController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping
+    @DeleteMapping("delete")
     public ResponseEntity<HttpStatus> deleteFine(@RequestBody CreditCard creditCard) {
         creditCardService.deleteCreditCard(creditCard);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

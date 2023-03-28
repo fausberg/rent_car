@@ -33,13 +33,13 @@ public class RentHistoryController {
         return new ResponseEntity<>(rentHistory, rentHistory.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
     }
 
-    @GetMapping
+    @GetMapping("all")
     public ResponseEntity<ArrayList<RentHistory>> getAllRentHistory() {
         return new ResponseEntity<>(rentHistoryService.getAllRentHistory(), HttpStatus.OK);
     }
 
-    @PutMapping
-    public ResponseEntity<HttpStatus> updareRentHistory(@RequestBody RentHistory rentHistory, BindingResult bindingResult) {
+    @PutMapping("update")
+    public ResponseEntity<HttpStatus> updateRentHistory(@RequestBody RentHistory rentHistory, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
@@ -50,7 +50,7 @@ public class RentHistoryController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping
+    @DeleteMapping("delete")
     public ResponseEntity<HttpStatus> deleteRentHistory(@RequestBody RentHistory rentHistory) {
         rentHistoryService.deleteRentHistory(rentHistory);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
