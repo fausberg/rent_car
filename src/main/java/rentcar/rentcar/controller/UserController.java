@@ -8,13 +8,20 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import rentcar.rentcar.domain.CreditCard;
 import rentcar.rentcar.domain.Fine;
 import rentcar.rentcar.domain.RentHistory;
 import rentcar.rentcar.service.UserService;
 import rentcar.rentcar.domain.User;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 
 @RestController
@@ -41,7 +48,7 @@ public class UserController {
     }
 
     @PutMapping("update")
-    public ResponseEntity<HttpStatus> updateUser(@RequestBody User user, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> updateUser(@RequestBody @Valid User user, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for(ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
@@ -53,8 +60,8 @@ public class UserController {
     }
 
     @DeleteMapping("delete")
-    public ResponseEntity<HttpStatus> deleteUser(@RequestBody User user) {
-        userService.deleteUser(user);
+    public ResponseEntity<HttpStatus> deleteUser() {
+        userService.deleteUser();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

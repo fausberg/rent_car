@@ -8,10 +8,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import rentcar.rentcar.domain.Car;
 import rentcar.rentcar.service.CarService;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 
 @RestController
@@ -38,13 +46,13 @@ public class CarController {
         return new ResponseEntity<>(carService.getAllCar(), HttpStatus.OK);
     }
 
-    @GetMapping("free")
+    @GetMapping("/free")
     public ResponseEntity<ArrayList<Car>> getFreeCars() {
         return new ResponseEntity<>(carService.getFreeCar(), HttpStatus.OK);
     }
 
     @PostMapping("create")
-    public ResponseEntity<HttpStatus> createCar(@RequestBody Car car, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> createCar(@RequestBody @Valid Car car, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for(ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
@@ -56,7 +64,7 @@ public class CarController {
     }
 
     @PutMapping("update")
-    public ResponseEntity<HttpStatus> updateCar(@RequestBody Car car, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> updateCar(@RequestBody @Valid Car car, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());

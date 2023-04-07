@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.net.http.HttpResponse;
 
 @RestController
-@RequestMapping(value = "/registration", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/reg", produces = MediaType.APPLICATION_JSON_VALUE)
 public class SecureController {
     private final SecureService secureService;
 

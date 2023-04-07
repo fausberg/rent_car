@@ -11,9 +11,9 @@ import java.util.ArrayList;
 @Repository
 public interface RentHistoryRepository extends JpaRepository<RentHistory, Integer> {
 
-    @Query(nativeQuery = true, value = "SELECT * FROM rent_historyes WHERE time_start = :timeStart ")
+    @Query(nativeQuery = true, value = "SELECT * FROM public.rent_history WHERE time_start = :timeStart ")
     RentHistory getRentHistoriesByTimeStart(Timestamp timeStart);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM rent_historyes WHERE user_id = :id")
+    @Query(nativeQuery = true, value = "SELECT * FROM public.rent_history WHERE user_id = :id")
     ArrayList<RentHistory> getRentHistoriesByUserId(int id);
 }

@@ -8,10 +8,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import rentcar.rentcar.domain.DriverLicence;
 import rentcar.rentcar.service.DriverLicenceService;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 
 @RestController
@@ -39,7 +47,7 @@ public class DriverLicenceController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<HttpStatus> createDriverLicence(@RequestBody DriverLicence driverLicence, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> createDriverLicence(@RequestBody @Valid DriverLicence driverLicence, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
@@ -51,7 +59,7 @@ public class DriverLicenceController {
     }
 
     @PutMapping("update")
-    public ResponseEntity<HttpStatus> updateDriverLicence(@RequestBody DriverLicence driverLicence, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> updateDriverLicence(@RequestBody @Valid DriverLicence driverLicence, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
@@ -63,8 +71,8 @@ public class DriverLicenceController {
     }
 
     @DeleteMapping("delete")
-    public ResponseEntity<HttpStatus> deleteDriverLicence(@RequestBody DriverLicence driverLicence) {
-        driverLicenceService.deleteDriverLicence(driverLicence);
+    public ResponseEntity<HttpStatus> deleteDriverLicence() {
+        driverLicenceService.deleteDriverLicence();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

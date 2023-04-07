@@ -1,71 +1,92 @@
-Hibernate: create sequence cars_s start 1 increment 1
+ create sequence cars_s start 1 increment 1;
 
-Hibernate: create sequence credit_card_id_seq start 1 increment 1
+ create sequence credit_card_id_seq start 1 increment 1;
 
-Hibernate: create sequence driver_licences_s start 1 increment 1
+ create sequence driver_licences_s start 1 increment 1;
 
-Hibernate: create sequence fines_s start 1 increment 1
+ create sequence fines_s start 1 increment 1;
 
-Hibernate: create sequence rent_history_s start 1 increment 1
+create sequence rent_history_s start 1 increment 1;
 
-Hibernate: create sequence users_s start 1 increment 1
+create sequence users_s start 1 increment 1;
 
-Hibernate: create table cars (
-    id int4 not null,
-    booking boolean,
-    color varchar(255) not null,
-    manufacturer varchar(255) not null,
-    model varchar(255) not null,
-    number varchar(255) not null,
-    price float8 not null,
-    primary key (id)
-);
+ create table public.cars (
+                              id integer primary key not null default nextval('cars_s'::regclass),
+                              booking boolean,
+                              color character varying(255),
+                              manufacturer character varying(255),
+                              model character varying(255),
+                              number character varying(255),
+                              price double precision
+ );
 
-Hibernate: create table credit_cards (
-    id int4 not null,
-    cvv varchar(255) not null,
-    card_number varchar(255) not null,
-    date varchar(255) not null,
-    user_id int4 not null,
-    primary key (id)
-);
+ create table public.credit_cards (
+                                      id integer primary key not null default nextval('credit_card_id_seq'::regclass),
+                                      cvv character varying(255),
+                                      card_number character varying(255),
+                                      date character varying(255),
+                                      user_id integer,
+                                      foreign key (user_id) references public.users (id)
+                                          match simple on update cascade on delete cascade
+ );
 
-Hibernate: create table driver_licences (
-    id int4 not null,
-    expire date not null,
-    issued date not null,
-    primary key (id)
-);
+ create table public.driver_licences (
+                                         id integer primary key not null default nextval('driver_licences_s'::regclass),
+                                         expire date,
+                                         issued date,
+                                         user_id integer,
+                                         foreign key (user_id) references public.users (id)
+                                             match simple on update cascade on delete cascade
+ );
 
-Hibernate: create table fines (
-    id int4 not null,
-    car_id varchar(255) not null,
-    date date not null,
-    description varchar(255) not null,
-    fee float8 not null,
-    user_id varchar(255) not null,
-    primary key (id)
-);
+ create table public.fines (
+                               id integer primary key not null default nextval('fines_s'::regclass),
+                               car_id integer,
+                               date date,
+                               description character varying(255),
+                               fee double precision,
+                               user_id integer,
+                               foreign key (car_id) references public.cars (id)
+                                   match simple on update cascade on delete cascade,
+                               foreign key (user_id) references public.users (id)
+                                   match simple on update cascade on delete cascade
+ );
 
-Hibernate: create table rent_historyes (
-    id int4 not null,
-    car_id int4 not null,
-    cost float8 not null,
-    time_end timestamp not null,
-    time_start timestamp not null,
-    user_id int4 not null,
-    primary key (id)
-);
+ create table public.flyway_schema_history (
+                                               installed_rank integer primary key not null,
+                                               version character varying(50),
+                                               description character varying(200) not null,
+                                               type character varying(20) not null,
+                                               script character varying(1000) not null,
+                                               checksum integer,
+                                               installed_by character varying(100) not null,
+                                               installed_on timestamp without time zone not null default now(),
+                                               execution_time integer not null,
+                                               success boolean not null
+ );
+ create index flyway_schema_history_s_idx on flyway_schema_history using btree (success);
 
-Hibernate: create table users (
-    id int4 not null,
-    email varchar(255),
-    first_name varchar(8) not null,
-    last_name varchar(10) not null,
-    login varchar(255) not null,
-    password varchar(255) not null,
-    phone_number varchar(255),
-    rent_history_start_time timestamp,
-    role varchar(255),
-    primary key (id)
-);
+ create table public.rent_history (
+                                      id integer primary key not null default nextval('rent_history_s'::regclass),
+                                      car_id integer,
+                                      cost double precision,
+                                      time_end timestamp without time zone,
+                                      time_start timestamp without time zone,
+                                      user_id integer,
+                                      foreign key (car_id) references public.cars (id)
+                                          match simple on update cascade on delete cascade,
+                                      foreign key (user_id) references public.users (id)
+                                          match simple on update cascade on delete cascade
+ );
+
+ create table public.users (
+                               id integer primary key not null default nextval('users_s'::regclass),
+                               email character varying(255),
+                               first_name character varying(8),
+                               last_name character varying(10),
+                               login character varying(255),
+                               password character varying(255),
+                               phone_number character varying(255),
+                               rent_history_start_time timestamp without time zone,
+                               role character varying(255)
+ );

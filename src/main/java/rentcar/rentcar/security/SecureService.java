@@ -3,7 +3,6 @@ package rentcar.rentcar.security;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,10 +54,8 @@ public class SecureService {
             user.setLastName(registrationUser.getLastName());
             user.setEmail(registrationUser.getEmail());
             user.setPhoneNumber(registrationUser.getPhoneNumber());
-
-            User savedUser = userRepository.save(user);
-
             user.setRole("USER");
+            User savedUser = userRepository.save(user);
 
             return true;
         } catch (LoginException e) {

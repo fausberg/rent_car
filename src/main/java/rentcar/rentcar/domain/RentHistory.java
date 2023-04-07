@@ -2,14 +2,18 @@ package rentcar.rentcar.domain;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name = "rent_historyes")
+@Table(name = "rent_history")
 public class RentHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "rh_seq")

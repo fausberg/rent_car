@@ -6,13 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import rentcar.rentcar.domain.CreditCard;
 import rentcar.rentcar.service.CreditCardService;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 
 @RestController
@@ -39,7 +45,7 @@ public class CreditCardController {
     }
 
     @PutMapping("update")
-    public ResponseEntity<HttpStatus> updateCreditCard(@RequestBody CreditCard creditCard, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> updateCreditCard(@RequestBody @Valid CreditCard creditCard, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for(ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
@@ -50,9 +56,9 @@ public class CreditCardController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("delete")
-    public ResponseEntity<HttpStatus> deleteFine(@RequestBody CreditCard creditCard) {
-        creditCardService.deleteCreditCard(creditCard);
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<HttpStatus> deleteFine(@PathVariable int id) {
+        creditCardService.deleteCreditCard(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

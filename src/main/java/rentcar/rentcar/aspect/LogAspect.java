@@ -1,4 +1,4 @@
-package rentcar.rentcar.domain.aspect;
+package rentcar.rentcar.aspect;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class LogAspect {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Before("within(rentcar.rentcar.*)")
+    @Before("within(rentcar.rentcar.service.*)")
     public void logBeforeMethod(JoinPoint joinPoint) {
         log.info("Start doing method " + joinPoint.getSignature());
     }
@@ -27,7 +27,8 @@ public class LogAspect {
     }
 
     @AfterThrowing(throwing = "error", value = "within(rentcar.rentcar.*)")
-    public void logAfterThrowingMethod(Throwable error) {
-        log.info("We have error: " + error);
+    public void logAfterThrowingMethod(JoinPoint joinPoint, Throwable error) {
+        log.error("Exception in this method" + joinPoint.getSignature());
+        log.error("We have error: " + error);
     }
 }

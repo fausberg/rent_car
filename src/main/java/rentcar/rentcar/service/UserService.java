@@ -1,5 +1,7 @@
 package rentcar.rentcar.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import rentcar.rentcar.repository.RentHistoryRepository;
 import rentcar.rentcar.repository.UserRepository;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -23,6 +26,8 @@ public class UserService {
     private final RentHistoryRepository rentHistoryRepository;
 
     private final FineRepository fineRepository;
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public UserService(UserRepository userRepository, CreditCardRepository creditCardRepository, RentHistoryRepository rentHistoryRepository, FineRepository fineRepository) {
@@ -36,7 +41,17 @@ public class UserService {
 
 
     public User getUserById(int id) {
-        return userRepository.findById(id).get();
+        try {
+            User user  = userRepository.findById(id).get();
+            if(user == null) {
+                throw new NoSuchElementException();
+            } else {
+                return user;
+            }
+        } catch (NoSuchElementException e) {
+            log.error(e.getMessage());
+        }
+        return new User();
     }
 
     public ArrayList<User> getAllUser() {
@@ -47,7 +62,7 @@ public class UserService {
         userRepository.saveAndFlush(user);
     }
 
-    public void deleteUser(User user) {
+    public void deleteUser() {
         userRepository.deleteById(getUserByLogin().getId());
     }
 

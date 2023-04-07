@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 @Repository
 public interface CreditCardRepository extends JpaRepository<CreditCard, Integer> {
-    @Query(nativeQuery = true, value = "SELECT * FROM credit_cards WHERE user_id = :id")
-    ArrayList<CreditCard> getCreditCardsByUserId(int id);
+    @Query(nativeQuery = true, value = "SELECT * FROM credit_cards WHERE user_id = :userId")
+    ArrayList<CreditCard> getCreditCardsByUserId(int userId);
 
     @Query(nativeQuery = true, value = "SELECT card_number FROM credit_cards")
     ArrayList<String> cardNumbers();

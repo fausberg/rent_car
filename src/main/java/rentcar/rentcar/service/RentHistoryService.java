@@ -1,5 +1,7 @@
 package rentcar.rentcar.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rentcar.rentcar.domain.Car;
@@ -9,12 +11,14 @@ import rentcar.rentcar.repository.RentHistoryRepository;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 @Service
 public class RentHistoryService {
 
     private final RentHistoryRepository rentHistoryRepository;
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final UserService userService;
 
     @Autowired
@@ -24,7 +28,17 @@ public class RentHistoryService {
     }
 
     public RentHistory getRentHistoryById(int id) {
-        return rentHistoryRepository.findById(id).get();
+        try {
+            RentHistory rentHistory  = rentHistoryRepository.findById(id).get();
+            if(rentHistory == null) {
+                throw new NoSuchElementException();
+            } else {
+                return rentHistory;
+            }
+        } catch (NoSuchElementException e) {
+            log.error(e.getMessage());
+        }
+        return new RentHistory();
     }
 
     public ArrayList<RentHistory> getAllRentHistory() {
@@ -55,8 +69,8 @@ public class RentHistoryService {
         rentHistoryRepository.saveAndFlush(rentHistory);
     }
 
-    public void deleteRentHistory(RentHistory rentHistory) {
-        rentHistoryRepository.delete(rentHistory);
+    public void deleteRentHistory(int id) {
+        rentHistoryRepository.deleteById(id);
     }
 
     public RentHistory getRentHistoriesByTimeStart(Timestamp timeStart) {

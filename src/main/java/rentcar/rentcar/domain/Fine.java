@@ -1,11 +1,15 @@
 package rentcar.rentcar.domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.Collection;
 
 @Entity
 @Data
@@ -26,9 +30,9 @@ public class Fine {
     private String description;
 
     @Column(name = "user_id")
-    private String userId;
+    private int userId;
 
     @Column(name = "car_id")
-    private String carId;
+    private int carId;
 
 }
