@@ -71,16 +71,28 @@ public class UserController {
 
     @GetMapping("/credit-cards")
     public ResponseEntity<ArrayList<CreditCard>> getAllUserCreditCards() {
-        return new ResponseEntity<>(userService.getAllCreditCardsByUserId(), HttpStatus.OK);
+        if(userService.getAllCreditCardsByUserId() != null) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
     @GetMapping("/fines")
     public ResponseEntity<ArrayList<Fine>> getAllUserFines() {
-        return new ResponseEntity<>(userService.getAllFinesByUserId(), HttpStatus.OK);
+        if(userService.getAllFinesByUserId() != null) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
     @GetMapping("/rent-histories")
     public ResponseEntity<ArrayList<RentHistory>> getAllRentHistoryByUserId() {
-        return new ResponseEntity<>(userService.getAllRentHistoryByUserId(), HttpStatus.OK);
+        if(userService.getAllRentHistoryByUserId() != null) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 }
