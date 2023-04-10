@@ -1,6 +1,8 @@
 package rentcar.rentcar.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,10 +12,13 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @Table(name = "driver_licences")
+@AllArgsConstructor
+@NoArgsConstructor
 public class DriverLicence {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "dl_seq")
@@ -28,4 +33,6 @@ public class DriverLicence {
 
     @Column(name = "user_id")
     private int userId;
+
+
 }

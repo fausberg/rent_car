@@ -53,7 +53,7 @@ public class RentHistoryService {
         rentHistory.setCost(car.getPrice());
         rentHistoryRepository.save(rentHistory);
         user.setRentHistoryStartTime(rentHistory.getTimeStart());
-        userService.updateUser(user);
+        userService.updateUserTimeBooking(user);
     }
 
     public RentHistory WriteRentHistoryEndTime(User user) {
@@ -61,7 +61,7 @@ public class RentHistoryService {
         rentHistory.setTimeEnd(new Timestamp(System.currentTimeMillis()));
         updateRentHistory(rentHistory);
         user.setRentHistoryStartTime(null);
-        userService.updateUser(user);
+        userService.updateUserTimeBooking(user);
         return rentHistory;
     }
 

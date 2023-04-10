@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rentcar.rentcar.domain.DriverLicence;
 import rentcar.rentcar.domain.User;
+import rentcar.rentcar.dto.DriverLicenceDTO;
+import rentcar.rentcar.exception.DriverLicenceException;
 import rentcar.rentcar.repository.DriverLicenceRepository;
 
 import java.util.ArrayList;
@@ -43,12 +45,30 @@ public class DriverLicenceService {
         return (ArrayList<DriverLicence>) driverLicenceRepository.findAll();
     }
 
-    public void createDriverLicence(DriverLicence driverLicence) {
-        driverLicence.setUserId(userService.getUserByLogin().getId());
-        driverLicenceRepository.save(driverLicence);
+    public boolean createDriverLicence(DriverLicenceDTO driverLicenceDTO) {
+        try {
+            DriverLicence testDriverLicence = null;
+            testDriverLicence = getDriverLicenceById(userService.getUserByLogin().getId());
+            if (testDriverLicence == null) {
+                DriverLicence driverLicence = new DriverLicence();
+                driverLicence.setUserId(userService.getUserByLogin().getId());
+                driverLicence.setExpire(driverLicenceDTO.getExpire());
+                driverLicence.setIssued(driverLicenceDTO.getIssued());
+                driverLicenceRepository.save(driverLicence);
+                return true;
+            } else {
+                throw new DriverLicenceException("driver licence is already exist");
+            }
+        } catch (DriverLicenceException e) {
+            log.error(e.getMessage());
+            return false;
+        }
     }
 
-    public void updateDriverLicence(DriverLicence driverLicence) {
+    public void updateDriverLicence(DriverLicenceDTO driverLicenceDTO) {
+        DriverLicence driverLicence = new DriverLicence();
+        driverLicence.setExpire(driverLicenceDTO.getExpire());
+        driverLicence.setIssued(driverLicenceDTO.getIssued());
         driverLicenceRepository.saveAndFlush(driverLicence);
     }
 
@@ -57,7 +77,7 @@ public class DriverLicenceService {
         driverLicenceRepository.deleteDriverLicenceByUserId(user.getId());
     }
 
-    public DriverLicence getDriverLIcencesByUserID(int id) {
+    public DriverLicence getDriverLicencesByUserID(int id) {
         return driverLicenceRepository.getDriverLicenceByUserID(id);
     }
 }

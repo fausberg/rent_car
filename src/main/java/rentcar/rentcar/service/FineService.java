@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rentcar.rentcar.domain.Fine;
 import rentcar.rentcar.domain.User;
+import rentcar.rentcar.dto.FineDTO;
 import rentcar.rentcar.exception.FineException;
 import rentcar.rentcar.repository.FineRepository;
 
@@ -44,11 +45,23 @@ public class FineService {
         return (ArrayList<Fine>) fineRepository.findAll();
     }
 
-    public void createFine(Fine fine) {
+    public void createFine(FineDTO fineDTO) {
+        Fine fine = new Fine();
+        fine.setDate(fineDTO.getDate());
+        fine.setUserId(fineDTO.getUserId());
+        fine.setCarId(fineDTO.getCarId());
+        fine.setFee(fineDTO.getFee());
+        fine.setDescription(fineDTO.getDescription());
         fineRepository.save(fine);
     }
 
-    public void updateFine(Fine fine) {
+    public void updateFine(FineDTO fineDTO) {
+        Fine fine = new Fine();
+        fine.setDate(fineDTO.getDate());
+        fine.setUserId(fineDTO.getUserId());
+        fine.setCarId(fineDTO.getCarId());
+        fine.setFee(fineDTO.getFee());
+        fine.setDescription(fineDTO.getDescription());
         fineRepository.saveAndFlush(fine);
     }
 

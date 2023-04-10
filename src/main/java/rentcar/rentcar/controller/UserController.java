@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import rentcar.rentcar.domain.CreditCard;
 import rentcar.rentcar.domain.Fine;
 import rentcar.rentcar.domain.RentHistory;
+import rentcar.rentcar.domain.request.RegistrationUser;
 import rentcar.rentcar.service.UserService;
 import rentcar.rentcar.domain.User;
 
@@ -39,43 +40,46 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable int id) {
         User user = userService.getUserById(id);
-        return new ResponseEntity<>(user, user.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
+        return new ResponseEntity<>(user, user.getId() != 0 ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("all")
+    @GetMapping("/all")
     public ResponseEntity<ArrayList<User>> getAllUser() {
         return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
     }
 
-    @PutMapping("update")
+    @PutMapping("/update")
     public ResponseEntity<HttpStatus> updateUser(@RequestBody @Valid User user, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for(ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
             }
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        userService.updateUser(user);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if(userService.updateUser(user)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @DeleteMapping("delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<HttpStatus> deleteUser() {
         userService.deleteUser();
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/cr")
+    @GetMapping("/credit-cards")
     public ResponseEntity<ArrayList<CreditCard>> getAllUserCreditCards() {
         return new ResponseEntity<>(userService.getAllCreditCardsByUserId(), HttpStatus.OK);
     }
 
-    @GetMapping("/fine")
+    @GetMapping("/fines")
     public ResponseEntity<ArrayList<Fine>> getAllUserFines() {
         return new ResponseEntity<>(userService.getAllFinesByUserId(), HttpStatus.OK);
     }
 
-    @GetMapping("/rh")
+    @GetMapping("/rent-histories")
     public ResponseEntity<ArrayList<RentHistory>> getAllRentHistoryByUserId() {
         return new ResponseEntity<>(userService.getAllRentHistoryByUserId(), HttpStatus.OK);
     }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rentcar.rentcar.domain.Fine;
+import rentcar.rentcar.dto.FineDTO;
 import rentcar.rentcar.service.FineService;
 
 import javax.validation.Valid;
@@ -38,41 +39,45 @@ public class FineController {
     @GetMapping("/{id}")
     public ResponseEntity<Fine> getFineById(@PathVariable int id) {
         Fine fine = fineService.getFineById(id);
-        return new ResponseEntity<>(fine, fine.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
+        return new ResponseEntity<>(fine, fine.getId() != 0 ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("all")
+    @GetMapping("/all")
     public ResponseEntity<ArrayList<Fine>> getAllFines() {
         return new ResponseEntity<>(fineService.getAllFine(), HttpStatus.OK);
     }
 
-    @PostMapping("create")
-    public ResponseEntity<HttpStatus> createFine(@RequestBody @Valid Fine fine, BindingResult bindingResult) {
+    @PostMapping("/create")
+    public ResponseEntity<HttpStatus> createFine(@RequestBody @Valid FineDTO fine, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for(ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
             }
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         fineService.createFine(fine);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("update")
-    public ResponseEntity<HttpStatus> updateFine(@RequestBody @Valid Fine fine, BindingResult bindingResult) {
+    @PutMapping("/update")
+    public ResponseEntity<HttpStatus> updateFine(@RequestBody @Valid FineDTO fine, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for(ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
             }
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         fineService.updateFine(fine);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("delete/{id}")
     public ResponseEntity<HttpStatus> deleteFine(@PathVariable int id) {
-        fineService.deleteFine(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            fineService.deleteFine(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

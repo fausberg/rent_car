@@ -22,7 +22,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping(value = "/rh", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/rent-history", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RentHistoryController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -37,29 +37,33 @@ public class RentHistoryController {
     @GetMapping("/{id}")
     public ResponseEntity<RentHistory> getRentHistoryById(@PathVariable int id) {
         RentHistory rentHistory = rentHistoryService.getRentHistoryById(id);
-        return new ResponseEntity<>(rentHistory, rentHistory.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
+        return new ResponseEntity<>(rentHistory, rentHistory.getId() != 0 ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("all")
+    @GetMapping("/all")
     public ResponseEntity<ArrayList<RentHistory>> getAllRentHistory() {
         return new ResponseEntity<>(rentHistoryService.getAllRentHistory(), HttpStatus.OK);
     }
 
-    @PutMapping("update")
+    @PutMapping("/update")
     public ResponseEntity<HttpStatus> updateRentHistory(@RequestBody @Valid RentHistory rentHistory, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
             }
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         rentHistoryService.updateRentHistory(rentHistory);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<HttpStatus> deleteRentHistory(@PathVariable int id) {
-        rentHistoryService.deleteRentHistory(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            rentHistoryService.deleteRentHistory(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

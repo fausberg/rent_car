@@ -17,13 +17,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rentcar.rentcar.domain.DriverLicence;
+import rentcar.rentcar.dto.DriverLicenceDTO;
 import rentcar.rentcar.service.DriverLicenceService;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping(value = "/dl", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/driver-licence", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DriverLicenceController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -38,41 +39,42 @@ public class DriverLicenceController {
     @GetMapping("/{id}")
     public ResponseEntity<DriverLicence> getDriverLicenceById(@PathVariable int id) {
         DriverLicence driverLicence = driverLicenceService.getDriverLicenceById(id);
-        return new ResponseEntity<>(driverLicence, driverLicence.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
+        return new ResponseEntity<>(driverLicence, driverLicence.getId() != 0 ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("all")
+    @GetMapping("/all")
     public ResponseEntity<ArrayList<DriverLicence>> getAllDriverLicence() {
         return new ResponseEntity<>(driverLicenceService.getAllDriverLicence(), HttpStatus.OK);
     }
 
-    @PostMapping("create")
-    public ResponseEntity<HttpStatus> createDriverLicence(@RequestBody @Valid DriverLicence driverLicence, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            for (ObjectError o : bindingResult.getAllErrors()) {
-                log.warn(o.getDefaultMessage());
-            }
+    @PostMapping("/create")
+    public ResponseEntity<HttpStatus> createDriverLicence(@RequestBody @Valid DriverLicenceDTO driverLicence, BindingResult bindingResult) {
+        if(driverLicenceService.createDriverLicence(driverLicence)) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } else {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        driverLicenceService.createDriverLicence(driverLicence);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("update")
-    public ResponseEntity<HttpStatus> updateDriverLicence(@RequestBody @Valid DriverLicence driverLicence, BindingResult bindingResult) {
+    @PutMapping("/update")
+    public ResponseEntity<HttpStatus> updateDriverLicence(@RequestBody @Valid DriverLicenceDTO driverLicence, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
             }
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         driverLicenceService.updateDriverLicence(driverLicence);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<HttpStatus> deleteDriverLicence() {
-        driverLicenceService.deleteDriverLicence();
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            driverLicenceService.deleteDriverLicence();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

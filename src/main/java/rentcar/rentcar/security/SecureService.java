@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rentcar.rentcar.domain.CreditCard;
 import rentcar.rentcar.domain.User;
+import rentcar.rentcar.domain.request.RegistrationCreditCard;
 import rentcar.rentcar.domain.request.RegistrationUser;
 import rentcar.rentcar.exception.CardException;
 import rentcar.rentcar.exception.LoginException;
@@ -48,7 +49,6 @@ public class SecureService {
             }
             User user = new User();
             user.setLogin(registrationUser.getLogin());
-            System.out.println(registrationUser);
             user.setPassword(passwordEncoder.encode(registrationUser.getPassword()));
             user.setFirstName(registrationUser.getFirstName());
             user.setLastName(registrationUser.getLastName());
@@ -64,20 +64,20 @@ public class SecureService {
         return false;
     }
 
-    public boolean createCreditCard(CreditCard creditCard) {
+    public boolean createCreditCard(RegistrationCreditCard registrationCreditCard) {
         try {
             ArrayList<String> cardNumbers = creditCardRepository.cardNumbers();
             for(String cardNumber : cardNumbers) {
-                if(cardNumber.equals(creditCard.getCardNumber())) {
+                if(cardNumber.equals(registrationCreditCard.getCardNumber())) {
                     throw new CardException("credit card already exists");
                 }
             }
             User user = userService.getUserByLogin();
-            System.out.println(creditCard);
-            creditCard.setDate(creditCard.getDate());
-            creditCard.setCVV(creditCard.getCVV());
+            CreditCard creditCard = new CreditCard();
+            creditCard.setCardNumber(registrationCreditCard.getCardNumber());
+            creditCard.setDate(registrationCreditCard.getDate());
+            creditCard.setCVV(registrationCreditCard.getCVV());
             creditCard.setUserId(user.getId());
-            System.out.println(creditCard);
             creditCardRepository.save(creditCard);
             return true;
         } catch (CardException e) {

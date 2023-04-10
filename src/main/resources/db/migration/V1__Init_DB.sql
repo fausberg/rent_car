@@ -10,6 +10,8 @@ create sequence rent_history_s start 1 increment 1;
 
 create sequence users_s start 1 increment 1;
 
+create sequence images_id_seq start 1 increment 1;
+
  create table public.cars (
                               id integer primary key not null default nextval('cars_s'::regclass),
                               booking boolean,
@@ -52,20 +54,6 @@ create sequence users_s start 1 increment 1;
                                    match simple on update cascade on delete cascade
  );
 
- create table public.flyway_schema_history (
-                                               installed_rank integer primary key not null,
-                                               version character varying(50),
-                                               description character varying(200) not null,
-                                               type character varying(20) not null,
-                                               script character varying(1000) not null,
-                                               checksum integer,
-                                               installed_by character varying(100) not null,
-                                               installed_on timestamp without time zone not null default now(),
-                                               execution_time integer not null,
-                                               success boolean not null
- );
- create index flyway_schema_history_s_idx on flyway_schema_history using btree (success);
-
  create table public.rent_history (
                                       id integer primary key not null default nextval('rent_history_s'::regclass),
                                       car_id integer,
@@ -89,4 +77,12 @@ create sequence users_s start 1 increment 1;
                                phone_number character varying(255),
                                rent_history_start_time timestamp without time zone,
                                role character varying(255)
+ );
+ create table public.images (
+                                id integer primary key not null default nextval('images_id_seq'::regclass),
+                                driver_licence_id integer,
+                                name character varying,
+                                data bytea,
+                                foreign key (driver_licence_id) references public.driver_licences (id)
+                                    match simple on update no action on delete no action
  );

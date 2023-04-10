@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 import rentcar.rentcar.domain.Car;
 import rentcar.rentcar.domain.DriverLicence;
 import rentcar.rentcar.domain.User;
+import rentcar.rentcar.dto.CarDTO;
 import rentcar.rentcar.exception.RentException;
 import rentcar.rentcar.repository.CarRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -25,6 +27,8 @@ public class CarService {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final RentHistoryService rentHistoryService;
+
+
 
     @Autowired
     public CarService(CarRepository carRepository, UserService userService, RentHistoryService rentHistoryService, DriverLicenceService driverLicenceService) {
@@ -48,31 +52,49 @@ public class CarService {
         return new Car();
     }
 
-    public ArrayList<Car> getAllCar() {
-        return (ArrayList<Car>) carRepository.findAll();
+    public List<Car> getAllCar() {
+        return carRepository.findAll();
     }
 
     public ArrayList<Car> getFreeCar() {
         return carRepository.getCars();
     }
 
-    public void createCar(Car car) {
+    public void createCar(CarDTO carDTO) {
+        Car car = new Car();
+        car.setNumber(carDTO.getNumber());
+        car.setColor(carDTO.getColor());
+        car.setModel(carDTO.getModel());
+        car.setManufacturer(carDTO.getManufacturer());
+        car.setPrice(carDTO.getPrice());
         carRepository.save(car);
     }
 
-    public void updateCar(Car car) {
+    public void updateCar(CarDTO carDTO) {
+        Car car = new Car();
+        car.setNumber(carDTO.getNumber());
+        car.setColor(carDTO.getColor());
+        car.setModel(carDTO.getModel());
+        car.setManufacturer(carDTO.getManufacturer());
+        car.setPrice(carDTO.getPrice());
         carRepository.saveAndFlush(car);
     }
 
-    public void deleteCar(int id) {
-        carRepository.deleteById(id);
+    public boolean deleteCarById(int id) {
+        Car car = null;
+        car = getCarById(id);
+        if(car != null){
+            carRepository.deleteById(car.getId());
+            return true;
+        }
+        return false;
     }
 
-    public void rentCar(Integer id) {
+    public boolean rentCar(Integer id) {
         try {
             User user = userService.getUserByLogin();
             Car car = getCarById(id);
-            DriverLicence driverLicence = driverLicenceService.getDriverLIcencesByUserID(user.getId());
+            DriverLicence driverLicence = driverLicenceService.getDriverLicencesByUserID(user.getId());
             LocalDate localDate = LocalDate.now();
             if(driverLicence != null && !localDate.isAfter(driverLicence.getIssued())) {
                 if (user.getRentHistoryStartTime() == null) {
@@ -81,6 +103,7 @@ public class CarService {
                     }
                     carRepository.bookCar(id);
                     rentHistoryService.WriteRentHistoryStartTime(user, car);
+                    return true;
                 } else {
                     throw new RentException("you have already rented a car");
                 }
@@ -89,19 +112,22 @@ public class CarService {
             }
         } catch (RentException e) {
             log.error(e.getMessage());
+            return false;
         }
     }
 
-    public void removeRentCar() {
+    public boolean removeRentCar() {
         try {
             User user = userService.getUserByLogin();
             if (user.getRentHistoryStartTime() != null) {
                 carRepository.removeTheBookingFromTheCar(rentHistoryService.WriteRentHistoryEndTime(user).getCarId());
+                return true;
             } else {
                 throw new RentException("you don't have a rental car");
             }
         } catch (RentException e) {
             log.error(e.getMessage());
+            return false;
         }
     }
 }

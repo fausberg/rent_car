@@ -4,11 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rentcar.rentcar.domain.CreditCard;
 import rentcar.rentcar.domain.Fine;
 import rentcar.rentcar.domain.RentHistory;
 import rentcar.rentcar.domain.User;
+import rentcar.rentcar.domain.request.RegistrationUser;
 import rentcar.rentcar.repository.CreditCardRepository;
 import rentcar.rentcar.repository.FineRepository;
 import rentcar.rentcar.repository.RentHistoryRepository;
@@ -25,16 +27,20 @@ public class UserService {
 
     private final RentHistoryRepository rentHistoryRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
+
     private final FineRepository fineRepository;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    public UserService(UserRepository userRepository, CreditCardRepository creditCardRepository, RentHistoryRepository rentHistoryRepository, FineRepository fineRepository) {
+    public UserService(UserRepository userRepository, CreditCardRepository creditCardRepository, RentHistoryRepository rentHistoryRepository, FineRepository fineRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.creditCardRepository = creditCardRepository;
         this.rentHistoryRepository = rentHistoryRepository;
         this.fineRepository = fineRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -58,12 +64,22 @@ public class UserService {
         return (ArrayList<User>) userRepository.findAll();
     }
 
-    public void updateUser(User user) {
+    public boolean updateUser(User user) {
+        if(getUserByLogin().getId() == user.getId()) {
+            userRepository.saveAndFlush(user);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void updateUserTimeBooking(User user) {
         userRepository.saveAndFlush(user);
     }
 
-    public void deleteUser() {
+    public boolean deleteUser() {
         userRepository.deleteById(getUserByLogin().getId());
+        return true;
     }
 
     public User getUserByLogin() {

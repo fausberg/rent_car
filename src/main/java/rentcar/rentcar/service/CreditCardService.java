@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rentcar.rentcar.domain.CreditCard;
 import rentcar.rentcar.domain.User;
+import rentcar.rentcar.domain.request.RegistrationCreditCard;
 import rentcar.rentcar.exception.CardException;
 import rentcar.rentcar.repository.CreditCardRepository;
 
@@ -43,26 +44,32 @@ public class CreditCardService {
         return (ArrayList<CreditCard>) creditCardRepository.findAll();
     }
 
-    public void updateCreditCard(CreditCard creditCard) {
-        creditCardRepository.saveAndFlush(creditCard);
+    public boolean updateCreditCard(CreditCard CreditCard) {
+        User user = userService.getUserByLogin();
+        ArrayList<CreditCard> creditCards = creditCardRepository.getCreditCardsByUserId(user.getId());
+        for (CreditCard creditCard : creditCards) {
+            if (creditCard.getId() == creditCard.getId()) {
+                creditCardRepository.saveAndFlush(creditCard);
+                return true;
+            }
+        }
+        return false;
     }
 
-    public void deleteCreditCard(int id) {
+    public boolean deleteCreditCard(int id) {
         try {
             User user = userService.getUserByLogin();
             ArrayList<CreditCard> creditCards = creditCardRepository.getCreditCardsByUserId(user.getId());
-            boolean hasCard = false;
             for (CreditCard creditCard : creditCards) {
                 if (creditCard.getId() == id) {
                     creditCardRepository.deleteById(creditCard.getId());
-                    hasCard = true;
+                    return true;
                 }
             }
-            if(!hasCard) {
-                throw new CardException("You do not have such a card");
-            }
+            throw new CardException("You do not have such a card");
         } catch (CardException e) {
             log.error(e.getMessage());
+            return false;
         }
     }
 }

@@ -8,15 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import rentcar.rentcar.domain.Car;
+import rentcar.rentcar.dto.CarDTO;
 import rentcar.rentcar.service.CarService;
 
 import javax.validation.Valid;
@@ -38,12 +32,12 @@ public class CarController {
     @GetMapping("/{id}")
     public ResponseEntity<Car> getCarById(@PathVariable int id) {
         Car car = carService.getCarById(id);
-        return new ResponseEntity<>(car, car.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
+        return new ResponseEntity<>(car, car.getId() != 0 ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("all")
+    @GetMapping("/all")
     public ResponseEntity<ArrayList<Car>> getAllCars() {
-        return new ResponseEntity<>(carService.getAllCar(), HttpStatus.OK);
+        return new ResponseEntity<>((ArrayList<Car>) carService.getAllCar(), HttpStatus.OK);
     }
 
     @GetMapping("/free")
@@ -51,45 +45,62 @@ public class CarController {
         return new ResponseEntity<>(carService.getFreeCar(), HttpStatus.OK);
     }
 
-    @PostMapping("create")
-    public ResponseEntity<HttpStatus> createCar(@RequestBody @Valid Car car, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            for(ObjectError o : bindingResult.getAllErrors()) {
-                log.warn(o.getDefaultMessage());
-            }
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
-        carService.createCar(car);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @PutMapping("update")
-    public ResponseEntity<HttpStatus> updateCar(@RequestBody @Valid Car car, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
+    @PostMapping("/create")
+    public ResponseEntity<HttpStatus> createCar(@RequestBody @Valid CarDTO car, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
             }
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        carService.createCar(car);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<HttpStatus> updateCar(@RequestBody @Valid CarDTO car, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            for (ObjectError o : bindingResult.getAllErrors()) {
+                log.warn(o.getDefaultMessage());
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         carService.updateCar(car);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<HttpStatus> deleteCar(@PathVariable int id) {
-        carService.deleteCar(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<HttpStatus> deleteCarById(@PathVariable int id) {
+        try {
+            if(carService.deleteCarById(id)) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                throw new IllegalArgumentException();
+            }
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @PutMapping("start/{id}")
+    @PutMapping("/start/{id}")
     public ResponseEntity<HttpStatus> startBooking(@PathVariable Integer id) {
-        carService.rentCar(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            if(carService.rentCar(id)) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                throw new IllegalArgumentException();
+            }
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @PutMapping("end")
+    @PutMapping("/end")
     public ResponseEntity<HttpStatus> removeTheBookingFromTheCar() {
-        carService.removeRentCar();
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if(carService.removeRentCar()) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
