@@ -44,15 +44,29 @@ public class CreditCardService {
         return (ArrayList<CreditCard>) creditCardRepository.findAll();
     }
 
-    public boolean updateCreditCard(CreditCard CreditCard) {
+    public boolean updateCreditCard(CreditCard creditCard) {
         User user = userService.getUserByLogin();
         ArrayList<CreditCard> creditCards = creditCardRepository.getCreditCardsByUserId(user.getId());
-        for (CreditCard creditCard : creditCards) {
-            if (creditCard.getId() == creditCard.getId()) {
+        for (CreditCard creditCardOfList : creditCards) {
+            if (creditCardOfList.getId() == creditCard.getId()) {
                 creditCardRepository.saveAndFlush(creditCard);
                 return true;
             }
         }
+        log.error("У вас нет такой карты");
+        return false;
+    }
+
+    public boolean updateAdminCreditCard(CreditCard creditCard) {
+
+        ArrayList<CreditCard> creditCards = (ArrayList<CreditCard>) creditCardRepository.findAll();
+        for (CreditCard creditCardOfList : creditCards) {
+            if (creditCardOfList.getId() == creditCard.getId()) {
+                creditCardRepository.saveAndFlush(creditCard);
+                return true;
+            }
+        }
+        log.error("У вас нет такой карты");
         return false;
     }
 
@@ -67,6 +81,44 @@ public class CreditCardService {
                 }
             }
             throw new CardException("You do not have such a card");
+        } catch (CardException e) {
+            log.error(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean deleteAdminCreditCard(int id) {
+        try {
+            ArrayList<CreditCard> creditCards = (ArrayList<CreditCard>) creditCardRepository.findAll();
+            for (CreditCard creditCard : creditCards) {
+                if (creditCard.getId() == id) {
+                    creditCardRepository.deleteById(creditCard.getId());
+                    return true;
+                }
+            }
+            throw new CardException("You do not have such a card");
+        } catch (CardException e) {
+            log.error(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean createCreditCard(RegistrationCreditCard registrationCreditCard) {
+        try {
+            ArrayList<String> cardNumbers = creditCardRepository.cardNumbers();
+            for(String cardNumber : cardNumbers) {
+                if(cardNumber.equals(registrationCreditCard.getCardNumber())) {
+                    throw new CardException("credit card already exists");
+                }
+            }
+            User user = userService.getUserByLogin();
+            CreditCard creditCard = new CreditCard();
+            creditCard.setCardNumber(registrationCreditCard.getCardNumber());
+            creditCard.setDate(registrationCreditCard.getDate());
+            creditCard.setCVV(registrationCreditCard.getCVV());
+            creditCard.setUserId(user.getId());
+            creditCardRepository.save(creditCard);
+            return true;
         } catch (CardException e) {
             log.error(e.getMessage());
             return false;

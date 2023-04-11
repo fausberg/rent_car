@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rentcar.rentcar.domain.DriverLicence;
-import rentcar.rentcar.domain.User;
-import rentcar.rentcar.dto.DriverLicenceDTO;
 import rentcar.rentcar.exception.DriverLicenceException;
 import rentcar.rentcar.repository.DriverLicenceRepository;
 
@@ -45,15 +43,15 @@ public class DriverLicenceService {
         return (ArrayList<DriverLicence>) driverLicenceRepository.findAll();
     }
 
-    public boolean createDriverLicence(DriverLicenceDTO driverLicenceDTO) {
+    public boolean createDriverLicence(DriverLicence driverLicence) {
         try {
-            DriverLicence testDriverLicence = null;
-            testDriverLicence = getDriverLicenceById(userService.getUserByLogin().getId());
-            if (testDriverLicence == null) {
-                DriverLicence driverLicence = new DriverLicence();
+            System.out.println(driverLicence);
+            DriverLicence newDriverLicence = null;
+            newDriverLicence = getDriverLicencesByUserID(userService.getUserByLogin().getId());
+            if (newDriverLicence == null) {
+                System.out.println("Я тут");
+                driverLicence.setStatus(false);
                 driverLicence.setUserId(userService.getUserByLogin().getId());
-                driverLicence.setExpire(driverLicenceDTO.getExpire());
-                driverLicence.setIssued(driverLicenceDTO.getIssued());
                 driverLicenceRepository.save(driverLicence);
                 return true;
             } else {
@@ -65,16 +63,49 @@ public class DriverLicenceService {
         }
     }
 
-    public void updateDriverLicence(DriverLicenceDTO driverLicenceDTO) {
-        DriverLicence driverLicence = new DriverLicence();
-        driverLicence.setExpire(driverLicenceDTO.getExpire());
-        driverLicence.setIssued(driverLicenceDTO.getIssued());
-        driverLicenceRepository.saveAndFlush(driverLicence);
+    public boolean updateDriverLicence(DriverLicence driverLicence) {
+        DriverLicence newDriverLicence = getDriverLicencesByUserID(userService.getUserByLogin().getId());
+        if(driverLicence.getId() == newDriverLicence.getId()) {
+            driverLicence.setUserId(userService.getUserByLogin().getId());
+            driverLicenceRepository.saveAndFlush(driverLicence);
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public void deleteDriverLicence() {
-        User user = userService.getUserByLogin();
-        driverLicenceRepository.deleteDriverLicenceByUserId(user.getId());
+    public boolean updateDriverLicenceStatus(int id) {
+        DriverLicence newDriverLicence = getDriverLicencesByUserID(userService.getUserByLogin().getId());
+        if(id == newDriverLicence.getId()) {
+            newDriverLicence.setStatus(true);
+            driverLicenceRepository.saveAndFlush(newDriverLicence);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean updateAdminDriverLicence(DriverLicence driverLicence) {
+        ArrayList<DriverLicence> driverLicences = getAllDriverLicence();
+        for (DriverLicence newDriverLicence : driverLicences) {
+            if (driverLicence.getId() == newDriverLicence.getId()) {
+                driverLicence.setUserId(userService.getUserByLogin().getId());
+                driverLicenceRepository.saveAndFlush(driverLicence);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean deleteAdminDriverLicence(int id) {
+        ArrayList<DriverLicence> driverLicences = getAllDriverLicence();
+        for (DriverLicence driverLicence : driverLicences) {
+            if(driverLicence.getId() == id) {
+                driverLicenceRepository.deleteById(id);
+                return true;
+            }
+        }
+        return false;
     }
 
     public DriverLicence getDriverLicencesByUserID(int id) {

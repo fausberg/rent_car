@@ -6,7 +6,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import rentcar.rentcar.domain.Car;
-import rentcar.rentcar.dto.CarDTO;
 import rentcar.rentcar.repository.CarRepository;
 
 import java.util.ArrayList;
@@ -14,9 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class CarServiceTest {
 
@@ -78,7 +75,7 @@ class CarServiceTest {
 
     @Test
     void createCar() {
-        CarDTO newCar = new CarDTO( "1234", "blue", "m4", "bmw", 323, false);
+        Car newCar = new Car(2, "1234", "blue", "m4", "bmw", 323, false);
         carService.createCar(newCar);
         verify(carRepository, times(2)).save(ArgumentMatchers.any(Car.class));
     }

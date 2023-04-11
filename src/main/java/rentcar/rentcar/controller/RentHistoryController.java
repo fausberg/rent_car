@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import rentcar.rentcar.domain.RentHistory;
 import rentcar.rentcar.service.RentHistoryService;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 
 @RestController
@@ -42,27 +39,29 @@ public class RentHistoryController {
 
     @GetMapping("/all")
     public ResponseEntity<ArrayList<RentHistory>> getAllRentHistory() {
-        return new ResponseEntity<>(rentHistoryService.getAllRentHistory(), HttpStatus.OK);
+        if(rentHistoryService.getAllRentHistory() != null) {
+            return new ResponseEntity<>(rentHistoryService.getAllRentHistory(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<HttpStatus> updateRentHistory(@RequestBody @Valid RentHistory rentHistory, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            for (ObjectError o : bindingResult.getAllErrors()) {
-                log.warn(o.getDefaultMessage());
-            }
+    public ResponseEntity<HttpStatus> updateRentHistory(@RequestBody RentHistory rentHistory) {
+        if(rentHistoryService.updateRentHistory(rentHistory)) {
+            rentHistoryService.updateRentHistory(rentHistory);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        rentHistoryService.updateRentHistory(rentHistory);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<HttpStatus> deleteRentHistory(@PathVariable int id) {
-        try {
+        if (rentHistoryService.deleteRentHistory(id)) {
             rentHistoryService.deleteRentHistory(id);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+        } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

@@ -10,7 +10,6 @@ import rentcar.rentcar.domain.CreditCard;
 import rentcar.rentcar.domain.Fine;
 import rentcar.rentcar.domain.RentHistory;
 import rentcar.rentcar.domain.User;
-import rentcar.rentcar.domain.request.RegistrationUser;
 import rentcar.rentcar.repository.CreditCardRepository;
 import rentcar.rentcar.repository.FineRepository;
 import rentcar.rentcar.repository.RentHistoryRepository;
@@ -24,12 +23,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CreditCardRepository creditCardRepository;
-
     private final RentHistoryRepository rentHistoryRepository;
-
     private final PasswordEncoder passwordEncoder;
-
-
     private final FineRepository fineRepository;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -42,9 +37,6 @@ public class UserService {
         this.fineRepository = fineRepository;
         this.passwordEncoder = passwordEncoder;
     }
-
-
-
 
     public User getUserById(int id) {
         try {
@@ -66,6 +58,17 @@ public class UserService {
 
     public boolean updateUser(User user) {
         if(getUserByLogin().getId() == user.getId()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userRepository.saveAndFlush(user);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean updateUserByAdmin(User user) {
+        if(userRepository.findById(user.getId()).isPresent()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.saveAndFlush(user);
             return true;
         } else {
@@ -78,8 +81,21 @@ public class UserService {
     }
 
     public boolean deleteUser() {
-        userRepository.deleteById(getUserByLogin().getId());
-        return true;
+        if(userRepository.findById(getUserByLogin().getId()).isPresent()) {
+            userRepository.deleteById(getUserByLogin().getId());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean deleteUserById(int id) {
+        if(userRepository.findById(id).isPresent()) {
+            userRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public User getUserByLogin() {
@@ -89,14 +105,15 @@ public class UserService {
     public ArrayList<CreditCard> getAllCreditCardsByUserId() {
         return creditCardRepository.getCreditCardsByUserId(getUserByLogin().getId());
     }
+
     public ArrayList<Fine> getAllFinesByUserId() {
         return fineRepository.getFinesByUserId(getUserByLogin().getId());
     }
     public ArrayList<RentHistory> getAllRentHistoryByUserId() {
         return rentHistoryRepository.getRentHistoriesByUserId(getUserByLogin().getId());
     }
-    public ArrayList<String> getAllLogins() {
-        return userRepository.logins();
-    }
 
+    public User getUserByLogin(String login) {
+        return userRepository.getUserByLogin(login);
+    }
 }

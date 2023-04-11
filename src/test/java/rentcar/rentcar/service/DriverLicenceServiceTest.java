@@ -2,16 +2,9 @@ package rentcar.rentcar.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import rentcar.rentcar.domain.Car;
-import rentcar.rentcar.domain.CreditCard;
 import rentcar.rentcar.domain.DriverLicence;
-import rentcar.rentcar.dto.CarDTO;
-import rentcar.rentcar.dto.DriverLicenceDTO;
 import rentcar.rentcar.repository.DriverLicenceRepository;
 
 import java.time.LocalDate;
@@ -19,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class DriverLicenceServiceTest {

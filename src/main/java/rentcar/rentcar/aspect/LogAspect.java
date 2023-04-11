@@ -1,7 +1,11 @@
 package rentcar.rentcar.aspect;
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -29,6 +33,5 @@ public class LogAspect {
     @AfterThrowing(throwing = "error", value = "within(rentcar.rentcar.*)")
     public void logAfterThrowingMethod(JoinPoint joinPoint, Throwable error) {
         log.error("Exception in this method" + joinPoint.getSignature());
-        log.error("We have error: " + error);
     }
 }

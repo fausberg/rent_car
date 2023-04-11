@@ -45,7 +45,7 @@ public class RentHistoryService {
         return (ArrayList<RentHistory>) rentHistoryRepository.findAll();
     }
 
-    public void WriteRentHistoryStartTime(User user, Car car) {
+    public void writeRentHistoryStartTime(User user, Car car) {
         RentHistory rentHistory = new RentHistory();
         rentHistory.setCarId(car.getId());
         rentHistory.setUserId(user.getId());
@@ -56,7 +56,7 @@ public class RentHistoryService {
         userService.updateUserTimeBooking(user);
     }
 
-    public RentHistory WriteRentHistoryEndTime(User user) {
+    public RentHistory writeRentHistoryEndTime(User user) {
         RentHistory rentHistory = getRentHistoriesByTimeStart(user.getRentHistoryStartTime());
         rentHistory.setTimeEnd(new Timestamp(System.currentTimeMillis()));
         updateRentHistory(rentHistory);
@@ -65,12 +65,28 @@ public class RentHistoryService {
         return rentHistory;
     }
 
-    public void updateRentHistory(RentHistory rentHistory) {
-        rentHistoryRepository.saveAndFlush(rentHistory);
+    public boolean updateRentHistory(RentHistory rentHistory) {
+        ArrayList<RentHistory> rentHistories = getAllRentHistory();
+        for (RentHistory rentHistoryOfList : rentHistories) {
+            if(rentHistoryOfList.getId() == rentHistory.getId()) {
+                rentHistoryRepository.saveAndFlush(rentHistory);
+                return true;
+            }
+        }
+        log.error("rent history not found");
+        return false;
     }
 
-    public void deleteRentHistory(int id) {
-        rentHistoryRepository.deleteById(id);
+    public boolean deleteRentHistory(int id) {
+        ArrayList<RentHistory> rentHistories = getAllRentHistory();
+        for (RentHistory rentHistory : rentHistories) {
+            if(rentHistory.getId() == id) {
+                rentHistoryRepository.deleteById(id);
+                return true;
+            }
+        }
+        log.error("rent history not found");
+        return false;
     }
 
     public RentHistory getRentHistoriesByTimeStart(Timestamp timeStart) {

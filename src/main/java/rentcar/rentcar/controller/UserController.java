@@ -18,9 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import rentcar.rentcar.domain.CreditCard;
 import rentcar.rentcar.domain.Fine;
 import rentcar.rentcar.domain.RentHistory;
-import rentcar.rentcar.domain.request.RegistrationUser;
-import rentcar.rentcar.service.UserService;
 import rentcar.rentcar.domain.User;
+import rentcar.rentcar.service.UserService;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -45,7 +44,11 @@ public class UserController {
 
     @GetMapping("/all")
     public ResponseEntity<ArrayList<User>> getAllUser() {
-        return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
+        if(userService.getAllUser() != null) {
+            return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
     @PutMapping("/update")
@@ -63,16 +66,45 @@ public class UserController {
         }
     }
 
+    @PutMapping("/update/admin")
+    public ResponseEntity<HttpStatus> updateUserByAdmin(@RequestBody @Valid User user, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            for(ObjectError o : bindingResult.getAllErrors()) {
+                log.warn(o.getDefaultMessage());
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if(userService.updateUserByAdmin(user)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @DeleteMapping("/delete")
     public ResponseEntity<HttpStatus> deleteUser() {
-        userService.deleteUser();
-        return new ResponseEntity<>(HttpStatus.OK);
+        if (userService.deleteUser()) {
+            userService.deleteUser();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteUserById(@PathVariable int id) {
+        if (userService.deleteUserById(id)) {
+            userService.deleteUserById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/credit-cards")
     public ResponseEntity<ArrayList<CreditCard>> getAllUserCreditCards() {
         if(userService.getAllCreditCardsByUserId() != null) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(userService.getAllCreditCardsByUserId(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -81,7 +113,7 @@ public class UserController {
     @GetMapping("/fines")
     public ResponseEntity<ArrayList<Fine>> getAllUserFines() {
         if(userService.getAllFinesByUserId() != null) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(userService.getAllFinesByUserId(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -90,7 +122,7 @@ public class UserController {
     @GetMapping("/rent-histories")
     public ResponseEntity<ArrayList<RentHistory>> getAllRentHistoryByUserId() {
         if(userService.getAllRentHistoryByUserId() != null) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(userService.getAllRentHistoryByUserId(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import rentcar.rentcar.domain.Car;
-import rentcar.rentcar.dto.CarDTO;
 import rentcar.rentcar.repository.CarRepository;
 import rentcar.rentcar.service.CarService;
 
@@ -30,14 +29,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class CarControllerTest {
 
+    @Mock
+    private CarService carService;
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private CarController carController;
-
-    @Mock
-    private CarService carService;
 
     private Car car;
 
@@ -51,7 +49,6 @@ class CarControllerTest {
         car = new Car(37, "1234", "red", "e63", "mercedes", 321, false);
         cars = new ArrayList<>();
         cars.add(car);
-        carRepository.save(car);
     }
 
     @WithMockUser(username = "user", password = "user", roles = "ADMIN")
@@ -84,7 +81,7 @@ class CarControllerTest {
     @WithMockUser(username = "user", password = "user", roles = "ADMIN")
     @Test
     void createCar() throws Exception {
-        CarDTO newCar = new CarDTO( "2345","blue", "m3", "bmw", 321, false);
+        Car newCar = new Car(2, "2345","blue", "m3", "bmw", 321, false);
         doNothing().when(carService).createCar(newCar);
 
         mockMvc.perform(post("/car/create")
@@ -95,7 +92,7 @@ class CarControllerTest {
     @WithMockUser(username = "user", password = "user", roles = "ADMIN")
     @Test
     void updateCar() throws Exception {
-        CarDTO newCar = new CarDTO( "2345","blue", "m3", "bmw", 321, false);
+        Car newCar = new Car(2, "2345","blue", "m3", "bmw", 321, false);
         doNothing().when(carService).createCar(newCar);
         mockMvc.perform(put("/car/update")
                         .contentType(MediaType.APPLICATION_JSON)

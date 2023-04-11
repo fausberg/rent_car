@@ -8,9 +8,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
-import rentcar.rentcar.domain.CreditCard;
-import rentcar.rentcar.domain.request.RegistrationCreditCard;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import rentcar.rentcar.domain.request.RegistrationUser;
 
 import javax.validation.Valid;
@@ -39,21 +41,13 @@ public class SecureController {
             }
             throw new IllegalArgumentException();
         }
-            secureService.registrationUser(registrationUser);
-            return new ResponseEntity<>(HttpStatus.OK);
+            if(secureService.registrationUser(registrationUser)) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-    }
-
-    @PostMapping("/credit-card")
-    public ResponseEntity<HttpResponse> registrationUser(@RequestBody @Valid RegistrationCreditCard creditCard, BindingResult bindingResult) {if(bindingResult.hasErrors()) {
-        for(ObjectError o : bindingResult.getAllErrors()) {
-            log.warn(o.getDefaultMessage());
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-        secureService.createCreditCard(creditCard);
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

@@ -3,7 +3,6 @@ package rentcar.rentcar.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import rentcar.rentcar.domain.CreditCard;
 import rentcar.rentcar.domain.Fine;
 
 import java.util.ArrayList;

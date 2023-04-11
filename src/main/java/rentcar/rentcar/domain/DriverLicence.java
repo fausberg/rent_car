@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -34,5 +33,6 @@ public class DriverLicence {
     @Column(name = "user_id")
     private int userId;
 
-
+    @Column(name = "status")
+    private Boolean status;
 }

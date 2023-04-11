@@ -18,11 +18,20 @@ public interface CarRepository extends JpaRepository<Car, Integer> {
     @Transactional
     @Modifying
     @Query(nativeQuery = true, value = "UPDATE cars SET booking = true WHERE id = :id")
-    void bookCar(Integer id);
+    void bookCar(int id);
 
     @Transactional
     @Modifying
     @Query(nativeQuery = true, value = "UPDATE cars SET booking = false WHERE id = :id")
     void removeTheBookingFromTheCar(Integer id);
+
+    @Transactional
+    @Query(nativeQuery = true, value = "SELECT * FROM cars WHERE number = :number")
+    Car getCarByNumber(String number);
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true, value = "DELETE FROM cars WHERE number = :number")
+    void deleteCarByNumber(String number);
 }
 

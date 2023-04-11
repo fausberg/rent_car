@@ -73,14 +73,4 @@ class UserControllerTest {
                 .andExpect(jsonPath("[0].id", is(user.getId())));
     }
 
-    @WithMockUser(username = "user", password = "user", roles = "ADMIN")
-    @Test
-    void updateUser() throws Exception {
-        RegistrationUser newUser = new RegistrationUser("ivan", "hom", "+375336291282", "ivanfadeev2003@mail.ru", "hum", "hum");
-        doNothing().when(userService).updateUser(newUser);
-        mockMvc.perform(put("/user/update")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(newUser)))
-                .andExpect(status().isOk());
-    }
 }

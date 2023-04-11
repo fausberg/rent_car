@@ -8,18 +8,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import rentcar.rentcar.domain.CreditCard;
 import rentcar.rentcar.domain.request.RegistrationCreditCard;
 import rentcar.rentcar.service.CreditCardService;
 
 import javax.validation.Valid;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 
 @RestController
@@ -42,28 +37,33 @@ public class CreditCardController {
 
     @GetMapping("/all")
     public ResponseEntity<ArrayList<CreditCard>> getAllCreditCards() {
-        return new ResponseEntity<>(creditCardService.getAllCreditCard(), HttpStatus.OK);
+        if (creditCardService.getAllCreditCard() != null) {
+            return new ResponseEntity<>(creditCardService.getAllCreditCard(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
     @PutMapping("/update")
     public ResponseEntity<HttpStatus> updateCreditCard(@RequestBody @Valid CreditCard creditCard, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            for(ObjectError o : bindingResult.getAllErrors()) {
+        if (bindingResult.hasErrors()) {
+            for (ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if(creditCardService.updateCreditCard(creditCard)) {
+        if (creditCardService.updateCreditCard(creditCard)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<HttpStatus> deleteCreditCardById(@PathVariable int id) {
         try {
-            if(creditCardService.deleteCreditCard(id)) {
+            if (creditCardService.deleteCreditCard(id)) {
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
                 throw new IllegalArgumentException();
@@ -72,4 +72,49 @@ public class CreditCardController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PutMapping("/update/admin")
+    public ResponseEntity<HttpStatus> updateAdminCreditCard(@RequestBody @Valid CreditCard creditCard, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            for (ObjectError o : bindingResult.getAllErrors()) {
+                log.warn(o.getDefaultMessage());
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (creditCardService.updateAdminCreditCard(creditCard)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteAdminCreditCardById(@PathVariable int id) {
+        try {
+            if (creditCardService.deleteAdminCreditCard(id)) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                throw new IllegalArgumentException();
+            }
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<HttpResponse> registrationUser(@RequestBody @Valid RegistrationCreditCard creditCard, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            for (ObjectError o : bindingResult.getAllErrors()) {
+                log.warn(o.getDefaultMessage());
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (creditCardService.createCreditCard(creditCard)) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 }

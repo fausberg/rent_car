@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,10 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rentcar.rentcar.domain.DriverLicence;
-import rentcar.rentcar.dto.DriverLicenceDTO;
 import rentcar.rentcar.service.DriverLicenceService;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 
 @RestController
@@ -44,12 +40,16 @@ public class DriverLicenceController {
 
     @GetMapping("/all")
     public ResponseEntity<ArrayList<DriverLicence>> getAllDriverLicence() {
-        return new ResponseEntity<>(driverLicenceService.getAllDriverLicence(), HttpStatus.OK);
+        if (driverLicenceService.getAllDriverLicence() != null) {
+            return new ResponseEntity<>(driverLicenceService.getAllDriverLicence(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
     @PostMapping("/create")
-    public ResponseEntity<HttpStatus> createDriverLicence(@RequestBody @Valid DriverLicenceDTO driverLicence, BindingResult bindingResult) {
-        if(driverLicenceService.createDriverLicence(driverLicence)) {
+    public ResponseEntity<HttpStatus> createDriverLicence(@RequestBody DriverLicence driverLicence) {
+        if (driverLicenceService.createDriverLicence(driverLicence)) {
             return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -57,23 +57,37 @@ public class DriverLicenceController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<HttpStatus> updateDriverLicence(@RequestBody @Valid DriverLicenceDTO driverLicence, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            for (ObjectError o : bindingResult.getAllErrors()) {
-                log.warn(o.getDefaultMessage());
-            }
+    public ResponseEntity<HttpStatus> updateDriverLicence(@RequestBody DriverLicence driverLicence) {
+        if (driverLicenceService.updateDriverLicence(driverLicence)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        driverLicenceService.updateDriverLicence(driverLicence);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<HttpStatus> deleteDriverLicence() {
-        try {
-            driverLicenceService.deleteDriverLicence();
+    @PutMapping("/status/{id}")
+    public ResponseEntity<HttpStatus> updateDriverLicenceStatus(@PathVariable int id) {
+        if (driverLicenceService.updateDriverLicenceStatus(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/update/admin")
+    public ResponseEntity<HttpStatus> updateAdminDriverLicence(@RequestBody DriverLicence driverLicence) {
+        if (driverLicenceService.updateAdminDriverLicence(driverLicence)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteAdminDriverLicence(@PathVariable int id) {
+        if (driverLicenceService.deleteAdminDriverLicence(id)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
