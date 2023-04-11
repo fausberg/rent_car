@@ -6,6 +6,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import rentcar.rentcar.domain.Car;
+import rentcar.rentcar.domain.DTO.CarDTO;
 import rentcar.rentcar.repository.CarRepository;
 
 import java.util.ArrayList;
@@ -75,15 +76,15 @@ class CarServiceTest {
 
     @Test
     void createCar() {
-        Car newCar = new Car(2, "1234", "blue", "m4", "bmw", 323, false);
+        CarDTO newCar = new CarDTO("1234", "blue", "m4", "bmw", 323, false);
         carService.createCar(newCar);
         verify(carRepository, times(2)).save(ArgumentMatchers.any(Car.class));
     }
 
     @Test
-    void deleteCarById() {
-        when(carRepository.findById(car.getId())).thenReturn(Optional.of(car));
-        assertTrue(carService.deleteCarById(car.getId()));
+    void deleteCarByNumber() {
+        when(carRepository.getCarByNumber(car.getNumber())).thenReturn(car);
+        assertTrue(carService.deleteCarByNumber(car.getNumber()));
         verify(carRepository, times(1)).deleteById(car.getId());
     }
 

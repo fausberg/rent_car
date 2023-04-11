@@ -77,7 +77,7 @@ public class CarController {
     @DeleteMapping("/delete/{number}")
     public ResponseEntity<HttpStatus> deleteCarById(@PathVariable String number) {
         try {
-            if(carService.deleteCarById(number)) {
+            if(carService.deleteCarByNumber(number)) {
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
                 throw new IllegalArgumentException();

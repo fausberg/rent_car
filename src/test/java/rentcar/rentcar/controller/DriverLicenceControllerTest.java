@@ -46,7 +46,7 @@ class DriverLicenceControllerTest {
 
     @BeforeEach
     void setDriverLicence() {
-        driverLicence = new DriverLicence(11, LocalDate.now(), LocalDate.now(), 1);
+        driverLicence = new DriverLicence(11, LocalDate.now(), LocalDate.now(), 1, false);
         driverLicences = new ArrayList<>();
         driverLicences.add(driverLicence);
         driverLicenceRepository.save(driverLicence);

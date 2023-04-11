@@ -32,7 +32,7 @@ class DriverLicenceServiceTest {
     void setDriverLicence() {
         MockitoAnnotations.openMocks(this);
         driverLicenceService = new DriverLicenceService(driverLicenceRepository, userService);
-        driverLicence = new DriverLicence(11, LocalDate.now(), LocalDate.now(), 1);
+        driverLicence = new DriverLicence(11, LocalDate.now(), LocalDate.now(), 1, false);
         driverLicences = new ArrayList<>();
         driverLicences.add(driverLicence);
         driverLicenceRepository.save(driverLicence);

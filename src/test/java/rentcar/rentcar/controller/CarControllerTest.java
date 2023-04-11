@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import rentcar.rentcar.domain.Car;
+import rentcar.rentcar.domain.DTO.CarDTO;
 import rentcar.rentcar.repository.CarRepository;
 import rentcar.rentcar.service.CarService;
 
@@ -81,7 +82,7 @@ class CarControllerTest {
     @WithMockUser(username = "user", password = "user", roles = "ADMIN")
     @Test
     void createCar() throws Exception {
-        Car newCar = new Car(2, "2345","blue", "m3", "bmw", 321, false);
+        CarDTO newCar = new CarDTO("2345","blue", "m3", "bmw", 321, false);
         doNothing().when(carService).createCar(newCar);
 
         mockMvc.perform(post("/car/create")
@@ -92,7 +93,7 @@ class CarControllerTest {
     @WithMockUser(username = "user", password = "user", roles = "ADMIN")
     @Test
     void updateCar() throws Exception {
-        Car newCar = new Car(2, "2345","blue", "m3", "bmw", 321, false);
+        CarDTO newCar = new CarDTO( "2345","blue", "m3", "bmw", 321, false);
         doNothing().when(carService).createCar(newCar);
         mockMvc.perform(put("/car/update")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -102,10 +103,10 @@ class CarControllerTest {
 
     @WithMockUser(username = "user", password = "user", roles = "ADMIN")
     @Test
-    void deleteCarById() throws Exception {
-        int id = 34;
-        when(carService.deleteCarById(id)).thenReturn(true);
-        mockMvc.perform(delete("/car/delete/{id}", id))
+    void deleteCarByNumber() throws Exception {
+        String number = "1234";
+        when(carService.deleteCarByNumber(number)).thenReturn(true);
+        mockMvc.perform(delete("/car/delete/{id}", number))
                 .andExpect(status().isOk());
     }
 

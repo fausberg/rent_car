@@ -76,7 +76,7 @@ public class CarService {
         return false;
     }
 
-    public boolean deleteCarById(String number) {
+    public boolean deleteCarByNumber(String number) {
         if (carRepository.getCarByNumber(number) != null) {
             carRepository.deleteCarByNumber(number);
             return true;
