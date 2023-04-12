@@ -39,30 +39,25 @@ public class RentHistoryController {
 
     @GetMapping("/all")
     public ResponseEntity<ArrayList<RentHistory>> getAllRentHistory() {
-        if(rentHistoryService.getAllRentHistory() != null) {
+        if (rentHistoryService.getAllRentHistory() != null) {
             return new ResponseEntity<>(rentHistoryService.getAllRentHistory(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/update")
     public ResponseEntity<HttpStatus> updateRentHistory(@RequestBody RentHistory rentHistory) {
-        if(rentHistoryService.updateRentHistory(rentHistory)) {
-            rentHistoryService.updateRentHistory(rentHistory);
+        if (rentHistoryService.updateRentHistory(rentHistory)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<HttpStatus> deleteRentHistory(@PathVariable int id) {
         if (rentHistoryService.deleteRentHistory(id)) {
-            rentHistoryService.deleteRentHistory(id);
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

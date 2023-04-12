@@ -44,87 +44,77 @@ public class UserController {
 
     @GetMapping("/all")
     public ResponseEntity<ArrayList<User>> getAllUser() {
-        if(userService.getAllUser() != null) {
+        if (userService.getAllUser() != null) {
             return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/update")
     public ResponseEntity<HttpStatus> updateUser(@RequestBody @Valid User user, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            for(ObjectError o : bindingResult.getAllErrors()) {
+        if (bindingResult.hasErrors()) {
+            for (ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if(userService.updateUser(user)) {
+        if (userService.updateUser(user)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/update/admin")
     public ResponseEntity<HttpStatus> updateUserByAdmin(@RequestBody @Valid User user, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            for(ObjectError o : bindingResult.getAllErrors()) {
+        if (bindingResult.hasErrors()) {
+            for (ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if(userService.updateUserByAdmin(user)) {
+        if (userService.updateUserByAdmin(user)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<HttpStatus> deleteUser() {
         if (userService.deleteUser()) {
-            userService.deleteUser();
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteUserById(@PathVariable int id) {
         if (userService.deleteUserById(id)) {
-            userService.deleteUserById(id);
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @GetMapping("/credit-cards")
     public ResponseEntity<ArrayList<CreditCard>> getAllUserCreditCards() {
-        if(userService.getAllCreditCardsByUserId() != null) {
+        if (userService.getAllCreditCardsByUserId() != null) {
             return new ResponseEntity<>(userService.getAllCreditCardsByUserId(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/fines")
     public ResponseEntity<ArrayList<Fine>> getAllUserFines() {
-        if(userService.getAllFinesByUserId() != null) {
+        if (userService.getAllFinesByUserId() != null) {
             return new ResponseEntity<>(userService.getAllFinesByUserId(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/rent-histories")
     public ResponseEntity<ArrayList<RentHistory>> getAllRentHistoryByUserId() {
-        if(userService.getAllRentHistoryByUserId() != null) {
+        if (userService.getAllRentHistoryByUserId() != null) {
             return new ResponseEntity<>(userService.getAllRentHistoryByUserId(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -42,53 +42,47 @@ public class DriverLicenceController {
     public ResponseEntity<ArrayList<DriverLicence>> getAllDriverLicence() {
         if (driverLicenceService.getAllDriverLicence() != null) {
             return new ResponseEntity<>(driverLicenceService.getAllDriverLicence(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/create")
     public ResponseEntity<HttpStatus> createDriverLicence(@RequestBody DriverLicence driverLicence) {
         if (driverLicenceService.createDriverLicence(driverLicence)) {
             return new ResponseEntity<>(HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
     @PutMapping("/update")
     public ResponseEntity<HttpStatus> updateDriverLicence(@RequestBody DriverLicence driverLicence) {
         if (driverLicenceService.updateDriverLicence(driverLicence)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/status/{id}")
     public ResponseEntity<HttpStatus> updateDriverLicenceStatus(@PathVariable int id) {
         if (driverLicenceService.updateDriverLicenceStatus(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/update/admin")
     public ResponseEntity<HttpStatus> updateAdminDriverLicence(@RequestBody DriverLicence driverLicence) {
         if (driverLicenceService.updateAdminDriverLicence(driverLicence)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteAdminDriverLicence(@PathVariable int id) {
         if (driverLicenceService.deleteAdminDriverLicence(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

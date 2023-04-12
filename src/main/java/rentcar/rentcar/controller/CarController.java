@@ -41,22 +41,19 @@ public class CarController {
 
     @GetMapping("/all")
     public ResponseEntity<ArrayList<Car>> getAllCars() {
-        if(carService.getAllCar() != null) {
-            carService.getAllCar();
+        if (carService.getAllCar() != null) {
             return new ResponseEntity<>((ArrayList<Car>) carService.getAllCar(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 
     @GetMapping("/free")
     public ResponseEntity<ArrayList<Car>> getFreeCars() {
-        if(carService.getFreeCar() != null) {
-            carService.getFreeCar();
+        if (carService.getFreeCar() != null) {
             return new ResponseEntity<>(carService.getFreeCar(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/create")
@@ -67,21 +64,19 @@ public class CarController {
 
     @PutMapping("/update")
     public ResponseEntity<HttpStatus> updateCar(@RequestBody CarDTO carDTO) {
-        if(carService.updateCar(carDTO)) {
+        if (carService.updateCar(carDTO)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/delete/{number}")
     public ResponseEntity<HttpStatus> deleteCarById(@PathVariable String number) {
         try {
-            if(carService.deleteCarByNumber(number)) {
+            if (carService.deleteCarByNumber(number)) {
                 return new ResponseEntity<>(HttpStatus.OK);
-            } else {
-                throw new IllegalArgumentException();
             }
+            throw new IllegalArgumentException();
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -90,11 +85,10 @@ public class CarController {
     @PutMapping("/start/{id}")
     public ResponseEntity<HttpStatus> startBooking(@PathVariable Integer id) {
         try {
-            if(carService.rentCar(id)) {
+            if (carService.rentCar(id)) {
                 return new ResponseEntity<>(HttpStatus.OK);
-            } else {
-                throw new IllegalArgumentException();
             }
+            throw new IllegalArgumentException();
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -102,10 +96,9 @@ public class CarController {
 
     @PutMapping("/end")
     public ResponseEntity<HttpStatus> removeTheBookingFromTheCar() {
-        if(carService.removeRentCar()) {
+        if (carService.removeRentCar()) {
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

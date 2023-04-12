@@ -28,11 +28,10 @@ public class DriverLicenceService {
     public DriverLicence getDriverLicenceById(int id) {
         try {
             DriverLicence driverLicence = driverLicenceRepository.findById(id).get();
-            if(driverLicence == null) {
+            if (driverLicence == null) {
                 throw new NoSuchElementException();
-            } else {
-                return driverLicence;
             }
+            return driverLicence;
         } catch (NoSuchElementException e) {
             log.error(e.getMessage());
         }
@@ -54,9 +53,8 @@ public class DriverLicenceService {
                 driverLicence.setUserId(userService.getUserByLogin().getId());
                 driverLicenceRepository.save(driverLicence);
                 return true;
-            } else {
-                throw new DriverLicenceException("driver licence is already exist");
             }
+            throw new DriverLicenceException("driver licence is already exist");
         } catch (DriverLicenceException e) {
             log.error(e.getMessage());
             return false;
@@ -65,24 +63,22 @@ public class DriverLicenceService {
 
     public boolean updateDriverLicence(DriverLicence driverLicence) {
         DriverLicence newDriverLicence = getDriverLicencesByUserID(userService.getUserByLogin().getId());
-        if(driverLicence.getId() == newDriverLicence.getId()) {
+        if (driverLicence.getId() == newDriverLicence.getId()) {
             driverLicence.setUserId(userService.getUserByLogin().getId());
             driverLicenceRepository.saveAndFlush(driverLicence);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public boolean updateDriverLicenceStatus(int id) {
-        DriverLicence newDriverLicence = getDriverLicencesByUserID(userService.getUserByLogin().getId());
-        if(id == newDriverLicence.getId()) {
+        DriverLicence newDriverLicence = getDriverLicenceById(id);
+        if (newDriverLicence != null) {
             newDriverLicence.setStatus(true);
             driverLicenceRepository.saveAndFlush(newDriverLicence);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public boolean updateAdminDriverLicence(DriverLicence driverLicence) {
@@ -100,7 +96,7 @@ public class DriverLicenceService {
     public boolean deleteAdminDriverLicence(int id) {
         ArrayList<DriverLicence> driverLicences = getAllDriverLicence();
         for (DriverLicence driverLicence : driverLicences) {
-            if(driverLicence.getId() == id) {
+            if (driverLicence.getId() == id) {
                 driverLicenceRepository.deleteById(id);
                 return true;
             }

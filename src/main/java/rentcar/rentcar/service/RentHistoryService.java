@@ -29,12 +29,11 @@ public class RentHistoryService {
 
     public RentHistory getRentHistoryById(int id) {
         try {
-            RentHistory rentHistory  = rentHistoryRepository.findById(id).get();
-            if(rentHistory == null) {
+            RentHistory rentHistory = rentHistoryRepository.findById(id).get();
+            if (rentHistory == null) {
                 throw new NoSuchElementException();
-            } else {
-                return rentHistory;
             }
+            return rentHistory;
         } catch (NoSuchElementException e) {
             log.error(e.getMessage());
         }
@@ -68,7 +67,7 @@ public class RentHistoryService {
     public boolean updateRentHistory(RentHistory rentHistory) {
         ArrayList<RentHistory> rentHistories = getAllRentHistory();
         for (RentHistory rentHistoryOfList : rentHistories) {
-            if(rentHistoryOfList.getId() == rentHistory.getId()) {
+            if (rentHistoryOfList.getId() == rentHistory.getId()) {
                 rentHistoryRepository.saveAndFlush(rentHistory);
                 return true;
             }
@@ -80,7 +79,7 @@ public class RentHistoryService {
     public boolean deleteRentHistory(int id) {
         ArrayList<RentHistory> rentHistories = getAllRentHistory();
         for (RentHistory rentHistory : rentHistories) {
-            if(rentHistory.getId() == id) {
+            if (rentHistory.getId() == id) {
                 rentHistoryRepository.deleteById(id);
                 return true;
             }

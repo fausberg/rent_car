@@ -29,11 +29,10 @@ public class FineService {
     public Fine getFineById(int id) {
         try {
             Fine fine = fineRepository.findById(id).get();
-            if(fine == null) {
+            if (fine == null) {
                 throw new NoSuchElementException();
-            } else {
-                return fine;
             }
+            return fine;
         } catch (NoSuchElementException e) {
             log.error(e.getMessage());
         }

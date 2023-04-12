@@ -35,17 +35,16 @@ public class SecureController {
     @PostMapping("/user")
     public ResponseEntity<HttpResponse> registrationUser(@RequestBody @Valid RegistrationUser registrationUser, BindingResult bindingResult) {
         try {
-            if(bindingResult.hasErrors()) {
-            for(ObjectError o : bindingResult.getAllErrors()) {
-                log.warn("validation failed" + bindingResult.getFieldError());
+            if (bindingResult.hasErrors()) {
+                for (ObjectError o : bindingResult.getAllErrors()) {
+                    log.warn("validation failed" + bindingResult.getFieldError());
+                }
+                throw new IllegalArgumentException();
             }
-            throw new IllegalArgumentException();
-        }
-            if(secureService.registrationUser(registrationUser)) {
+            if (secureService.registrationUser(registrationUser)) {
                 return new ResponseEntity<>(HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

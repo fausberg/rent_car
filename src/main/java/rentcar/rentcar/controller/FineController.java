@@ -43,11 +43,10 @@ public class FineController {
 
     @GetMapping("/all")
     public ResponseEntity<ArrayList<Fine>> getAllFines() {
-        if(fineService.getAllFine() != null) {
+        if (fineService.getAllFine() != null) {
             return new ResponseEntity<>(fineService.getAllFine(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/create")
@@ -67,18 +66,15 @@ public class FineController {
         if (fineService.updateFine(fine)) {
             fineService.updateFine(fine);
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("delete/{id}")
     public ResponseEntity<HttpStatus> deleteFine(@PathVariable int id) {
         if (fineService.deleteFine(id)) {
-            fineService.deleteFine(id);
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

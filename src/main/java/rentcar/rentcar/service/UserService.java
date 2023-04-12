@@ -40,8 +40,8 @@ public class UserService {
 
     public User getUserById(int id) {
         try {
-            User user  = userRepository.findById(id).get();
-            if(user == null) {
+            User user = userRepository.findById(id).get();
+            if (user == null) {
                 throw new NoSuchElementException();
             } else {
                 return user;
@@ -57,23 +57,21 @@ public class UserService {
     }
 
     public boolean updateUser(User user) {
-        if(getUserByLogin().getId() == user.getId()) {
+        if (getUserByLogin().getId() == user.getId()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.saveAndFlush(user);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public boolean updateUserByAdmin(User user) {
-        if(userRepository.findById(user.getId()).isPresent()) {
+        if (userRepository.findById(user.getId()).isPresent()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.saveAndFlush(user);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public void updateUserTimeBooking(User user) {
@@ -81,21 +79,19 @@ public class UserService {
     }
 
     public boolean deleteUser() {
-        if(userRepository.findById(getUserByLogin().getId()).isPresent()) {
+        if (userRepository.findById(getUserByLogin().getId()).isPresent()) {
             userRepository.deleteById(getUserByLogin().getId());
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public boolean deleteUserById(int id) {
-        if(userRepository.findById(id).isPresent()) {
+        if (userRepository.findById(id).isPresent()) {
             userRepository.deleteById(id);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public User getUserByLogin() {
@@ -109,6 +105,7 @@ public class UserService {
     public ArrayList<Fine> getAllFinesByUserId() {
         return fineRepository.getFinesByUserId(getUserByLogin().getId());
     }
+
     public ArrayList<RentHistory> getAllRentHistoryByUserId() {
         return rentHistoryRepository.getRentHistoriesByUserId(getUserByLogin().getId());
     }

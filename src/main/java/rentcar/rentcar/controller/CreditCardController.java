@@ -39,9 +39,8 @@ public class CreditCardController {
     public ResponseEntity<ArrayList<CreditCard>> getAllCreditCards() {
         if (creditCardService.getAllCreditCard() != null) {
             return new ResponseEntity<>(creditCardService.getAllCreditCard(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/update")
@@ -54,9 +53,8 @@ public class CreditCardController {
         }
         if (creditCardService.updateCreditCard(creditCard)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 
@@ -65,9 +63,8 @@ public class CreditCardController {
         try {
             if (creditCardService.deleteCreditCard(id)) {
                 return new ResponseEntity<>(HttpStatus.OK);
-            } else {
-                throw new IllegalArgumentException();
             }
+            throw new IllegalArgumentException();
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -83,9 +80,8 @@ public class CreditCardController {
         }
         if (creditCardService.updateAdminCreditCard(creditCard)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/{id}")
@@ -93,9 +89,8 @@ public class CreditCardController {
         try {
             if (creditCardService.deleteAdminCreditCard(id)) {
                 return new ResponseEntity<>(HttpStatus.OK);
-            } else {
-                throw new IllegalArgumentException();
             }
+            throw new IllegalArgumentException();
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -111,9 +106,8 @@ public class CreditCardController {
         }
         if (creditCardService.createCreditCard(creditCard)) {
             return new ResponseEntity<>(HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 

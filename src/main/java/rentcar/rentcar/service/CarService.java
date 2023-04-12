@@ -67,7 +67,7 @@ public class CarService {
     public boolean updateCar(CarDTO carDTO) {
         ArrayList<Car> cars = (ArrayList<Car>) getAllCar();
         for (Car carOfList : cars) {
-            if(carOfList.getNumber().equals(carDTO.getNumber())) {
+            if (carOfList.getNumber().equals(carDTO.getNumber())) {
                 Car car = new Car(carRepository.getCarByNumber(carDTO.getNumber()).getId(), carDTO.getNumber(), carDTO.getColor(), carDTO.getModel(), carDTO.getManufacturer(), carDTO.getPrice(), carDTO.isBooking());
                 carRepository.saveAndFlush(car);
                 return true;
@@ -104,9 +104,8 @@ public class CarService {
                         } else {
                             throw new RentException("you have already rented a car");
                         }
-                    } else {
-                        throw new RentException("You don't have a driver's license or is it expired or is not checked");
                     }
+                    throw new RentException("You don't have a driver's license or is it expired or is not checked");
                 }
             }
             return false;
@@ -122,9 +121,8 @@ public class CarService {
             if (user.getRentHistoryStartTime() != null) {
                 carRepository.removeTheBookingFromTheCar(rentHistoryService.writeRentHistoryEndTime(user).getCarId());
                 return true;
-            } else {
-                throw new RentException("you don't have a rental car");
             }
+            throw new RentException("you don't have a rental car");
         } catch (RentException e) {
             log.error(e.getMessage());
             return false;
