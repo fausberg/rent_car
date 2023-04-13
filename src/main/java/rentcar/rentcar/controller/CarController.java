@@ -50,7 +50,7 @@ public class CarController {
 
     @GetMapping("/free")
     public ResponseEntity<ArrayList<Car>> getFreeCars() {
-        if (carService.getFreeCar() != null) {
+        if (!carService.getFreeCar().isEmpty()) {
             return new ResponseEntity<>(carService.getFreeCar(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

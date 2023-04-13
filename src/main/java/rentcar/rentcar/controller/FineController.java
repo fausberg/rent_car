@@ -43,20 +43,14 @@ public class FineController {
 
     @GetMapping("/all")
     public ResponseEntity<ArrayList<Fine>> getAllFines() {
-        if (fineService.getAllFine() != null) {
+        if (!fineService.getAllFine().isEmpty()) {
             return new ResponseEntity<>(fineService.getAllFine(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<HttpStatus> createFine(@RequestBody @Valid Fine fine, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            for (ObjectError o : bindingResult.getAllErrors()) {
-                log.warn(o.getDefaultMessage());
-            }
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<HttpStatus> createFine(@RequestBody @Valid Fine fine) {
         fineService.createFine(fine);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

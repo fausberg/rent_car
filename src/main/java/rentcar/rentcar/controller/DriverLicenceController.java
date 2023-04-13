@@ -40,7 +40,7 @@ public class DriverLicenceController {
 
     @GetMapping("/all")
     public ResponseEntity<ArrayList<DriverLicence>> getAllDriverLicence() {
-        if (driverLicenceService.getAllDriverLicence() != null) {
+        if (!driverLicenceService.getAllDriverLicence().isEmpty()) {
             return new ResponseEntity<>(driverLicenceService.getAllDriverLicence(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

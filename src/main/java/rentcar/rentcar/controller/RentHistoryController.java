@@ -39,7 +39,7 @@ public class RentHistoryController {
 
     @GetMapping("/all")
     public ResponseEntity<ArrayList<RentHistory>> getAllRentHistory() {
-        if (rentHistoryService.getAllRentHistory() != null) {
+        if (!rentHistoryService.getAllRentHistory().isEmpty()) {
             return new ResponseEntity<>(rentHistoryService.getAllRentHistory(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

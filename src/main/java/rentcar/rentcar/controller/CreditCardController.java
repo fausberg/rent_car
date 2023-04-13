@@ -37,7 +37,7 @@ public class CreditCardController {
 
     @GetMapping("/all")
     public ResponseEntity<ArrayList<CreditCard>> getAllCreditCards() {
-        if (creditCardService.getAllCreditCard() != null) {
+        if (!creditCardService.getAllCreditCard().isEmpty()) {
             return new ResponseEntity<>(creditCardService.getAllCreditCard(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

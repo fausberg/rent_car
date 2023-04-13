@@ -44,7 +44,7 @@ public class UserController {
 
     @GetMapping("/all")
     public ResponseEntity<ArrayList<User>> getAllUser() {
-        if (userService.getAllUser() != null) {
+        if (!userService.getAllUser().isEmpty()) {
             return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -96,7 +96,7 @@ public class UserController {
 
     @GetMapping("/credit-cards")
     public ResponseEntity<ArrayList<CreditCard>> getAllUserCreditCards() {
-        if (userService.getAllCreditCardsByUserId() != null) {
+        if (!userService.getAllCreditCardsByUserId().isEmpty()) {
             return new ResponseEntity<>(userService.getAllCreditCardsByUserId(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -104,7 +104,7 @@ public class UserController {
 
     @GetMapping("/fines")
     public ResponseEntity<ArrayList<Fine>> getAllUserFines() {
-        if (userService.getAllFinesByUserId() != null) {
+        if (!userService.getAllFinesByUserId().isEmpty()) {
             return new ResponseEntity<>(userService.getAllFinesByUserId(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -112,7 +112,7 @@ public class UserController {
 
     @GetMapping("/rent-histories")
     public ResponseEntity<ArrayList<RentHistory>> getAllRentHistoryByUserId() {
-        if (userService.getAllRentHistoryByUserId() != null) {
+        if (!userService.getAllRentHistoryByUserId().isEmpty()) {
             return new ResponseEntity<>(userService.getAllRentHistoryByUserId(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
