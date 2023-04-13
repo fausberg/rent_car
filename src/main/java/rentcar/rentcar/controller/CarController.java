@@ -41,7 +41,7 @@ public class CarController {
 
     @GetMapping("/all")
     public ResponseEntity<ArrayList<Car>> getAllCars() {
-        if (carService.getAllCar() != null) {
+        if (!carService.getAllCar().isEmpty()) {
             return new ResponseEntity<>((ArrayList<Car>) carService.getAllCar(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
