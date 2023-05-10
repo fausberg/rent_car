@@ -17,6 +17,7 @@ import rentcar.rentcar.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 public class UserService {
@@ -57,8 +58,9 @@ public class UserService {
     }
 
     public boolean updateUser(User user) {
-        if (getUserByLogin().getId() == user.getId()) {
+        if (Objects.equals(getUserByLogin().getLogin(), user.getLogin())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setId(getUserByLogin().getId());
             userRepository.saveAndFlush(user);
             return true;
         }
@@ -66,8 +68,10 @@ public class UserService {
     }
 
     public boolean updateUserByAdmin(User user) {
-        if (userRepository.findById(user.getId()).isPresent()) {
+        if (userRepository.findUserByLogin(user.getLogin()) != null) {
+            User userOfList = userRepository.findUserByLogin(user.getLogin());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setId(userOfList.getId());
             userRepository.saveAndFlush(user);
             return true;
         }

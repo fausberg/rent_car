@@ -1,4 +1,4 @@
-package rentcar.rentcar.domain.request;
+package rentcar.rentcar.domain.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegistrationUser {
+public class UserDTO {
     @NotBlank
     @Size(max = 8)
     private String firstName;

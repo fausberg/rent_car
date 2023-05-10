@@ -1,4 +1,4 @@
-package rentcar.rentcar.security;
+package rentcar.rentcar.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import rentcar.rentcar.domain.request.RegistrationUser;
+import rentcar.rentcar.domain.DTO.UserDTO;
+import rentcar.rentcar.service.SecureService;
 
 import javax.validation.Valid;
 import java.net.http.HttpResponse;
@@ -33,7 +34,7 @@ public class SecureController {
 
 
     @PostMapping("/user")
-    public ResponseEntity<HttpResponse> registrationUser(@RequestBody @Valid RegistrationUser registrationUser, BindingResult bindingResult) {
+    public ResponseEntity<HttpResponse> registrationUser(@RequestBody @Valid UserDTO registrationUser, BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors()) {
                 for (ObjectError o : bindingResult.getAllErrors()) {

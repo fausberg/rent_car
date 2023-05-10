@@ -67,7 +67,8 @@ public class RentHistoryService {
     public boolean updateRentHistory(RentHistory rentHistory) {
         ArrayList<RentHistory> rentHistories = getAllRentHistory();
         for (RentHistory rentHistoryOfList : rentHistories) {
-            if (rentHistoryOfList.getId() == rentHistory.getId()) {
+            if (rentHistoryOfList.getTimeStart() == rentHistory.getTimeStart() && rentHistoryOfList.getTimeEnd() == rentHistory.getTimeEnd()) {
+                rentHistory.setId(rentHistoryOfList.getId());
                 rentHistoryRepository.saveAndFlush(rentHistory);
                 return true;
             }

@@ -63,8 +63,8 @@ public class DriverLicenceService {
 
     public boolean updateDriverLicence(DriverLicence driverLicence) {
         DriverLicence newDriverLicence = getDriverLicencesByUserID(userService.getUserByLogin().getId());
-        if (driverLicence.getId() == newDriverLicence.getId()) {
-            driverLicence.setUserId(userService.getUserByLogin().getId());
+        if (driverLicence.getUserId() == newDriverLicence.getUserId()) {
+            driverLicence.setId(newDriverLicence.getId());
             driverLicenceRepository.saveAndFlush(driverLicence);
             return true;
         }
@@ -84,8 +84,8 @@ public class DriverLicenceService {
     public boolean updateAdminDriverLicence(DriverLicence driverLicence) {
         ArrayList<DriverLicence> driverLicences = getAllDriverLicence();
         for (DriverLicence newDriverLicence : driverLicences) {
-            if (driverLicence.getId() == newDriverLicence.getId()) {
-                driverLicence.setUserId(userService.getUserByLogin().getId());
+            if (driverLicence.getUserId() == newDriverLicence.getUserId()) {
+                driverLicence.setId(newDriverLicence.getId());
                 driverLicenceRepository.saveAndFlush(driverLicence);
                 return true;
             }

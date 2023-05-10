@@ -5,13 +5,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rentcar.rentcar.domain.CreditCard;
+import rentcar.rentcar.domain.DTO.CreditCardDTO;
+import rentcar.rentcar.domain.DTO.UserDTO;
 import rentcar.rentcar.domain.User;
-import rentcar.rentcar.domain.request.RegistrationCreditCard;
 import rentcar.rentcar.exception.CardException;
 import rentcar.rentcar.repository.CreditCardRepository;
 
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 public class CreditCardService {
@@ -48,7 +50,8 @@ public class CreditCardService {
         User user = userService.getUserByLogin();
         ArrayList<CreditCard> creditCards = creditCardRepository.getCreditCardsByUserId(user.getId());
         for (CreditCard creditCardOfList : creditCards) {
-            if (creditCardOfList.getId() == creditCard.getId()) {
+            if (Objects.equals(creditCardOfList.getCardNumber(), creditCard.getCardNumber())) {
+                creditCard.setId(creditCardOfList.getId());
                 creditCardRepository.saveAndFlush(creditCard);
                 return true;
             }
@@ -61,7 +64,7 @@ public class CreditCardService {
 
         ArrayList<CreditCard> creditCards = (ArrayList<CreditCard>) creditCardRepository.findAll();
         for (CreditCard creditCardOfList : creditCards) {
-            if (creditCardOfList.getId() == creditCard.getId()) {
+            if (Objects.equals(creditCardOfList.getCardNumber(), creditCard.getCardNumber())) {
                 creditCardRepository.saveAndFlush(creditCard);
                 return true;
             }
@@ -103,7 +106,7 @@ public class CreditCardService {
         }
     }
 
-    public boolean createCreditCard(RegistrationCreditCard registrationCreditCard) {
+    public boolean createCreditCard(CreditCardDTO registrationCreditCard) {
         try {
             ArrayList<String> cardNumbers = creditCardRepository.cardNumbers();
             for(String cardNumber : cardNumbers) {

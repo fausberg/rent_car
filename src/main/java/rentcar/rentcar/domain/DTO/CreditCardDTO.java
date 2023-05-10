@@ -1,4 +1,4 @@
-package rentcar.rentcar.domain.request;
+package rentcar.rentcar.domain.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,9 +8,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class RegistrationCreditCard {
+@AllArgsConstructor
+public class CreditCardDTO {
     @NotBlank
     @Pattern(regexp = "[0-9]{16}")
     private String cardNumber;

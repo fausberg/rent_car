@@ -50,7 +50,8 @@ public class FineService {
     public boolean updateFine(Fine fine) {
         ArrayList<Fine> fines = getAllFine();
         for (Fine fineOfList : fines) {
-            if (fineOfList.getId() == fine.getId()) {
+            if (fineOfList.getUserId() == fine.getId() && fineOfList.getDate() == fine.getDate()) {
+                fine.setId(fineOfList.getId());
                 fineRepository.saveAndFlush(fine);
                 return true;
             }

@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rentcar.rentcar.domain.Car;
 import rentcar.rentcar.domain.DTO.CarDTO;
+import rentcar.rentcar.mappers.CarMapper;
 import rentcar.rentcar.service.CarService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/car", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -27,31 +29,43 @@ public class CarController {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final CarService carService;
+    private final CarMapper carMapper;
 
     @Autowired
-    public CarController(CarService carService) {
+    public CarController(CarService carService, CarMapper carMapper) {
         this.carService = carService;
+        this.carMapper = carMapper;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Car> getCarById(@PathVariable int id) {
+    public ResponseEntity<CarDTO> getCarById(@PathVariable int id) {
         Car car = carService.getCarById(id);
-        return new ResponseEntity<>(car, car.getId() != 0 ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+        CarDTO carDTO = carMapper.mapCarToCarDTO(car);
+        return new ResponseEntity<>(carDTO, car.getId() != 0 ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<ArrayList<Car>> getAllCars() {
+    public ResponseEntity<ArrayList<CarDTO>> getAllCars() {
         if (!carService.getAllCar().isEmpty()) {
-            return new ResponseEntity<>((ArrayList<Car>) carService.getAllCar(), HttpStatus.OK);
+            List<Car> cars = carService.getAllCar();
+            ArrayList<CarDTO> carDTOS = new ArrayList<>();
+            for (Car car : cars) {
+                carDTOS.add(carMapper.mapCarToCarDTO(car));
+            }
+            return new ResponseEntity<>(carDTOS, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
     }
 
     @GetMapping("/free")
-    public ResponseEntity<ArrayList<Car>> getFreeCars() {
+    public ResponseEntity<ArrayList<CarDTO>> getFreeCars() {
         if (!carService.getFreeCar().isEmpty()) {
-            return new ResponseEntity<>(carService.getFreeCar(), HttpStatus.OK);
+            List<Car> cars = carService.getFreeCar();
+            ArrayList<CarDTO> carDTOS = new ArrayList<>();
+            for (Car car : cars) {
+                carDTOS.add(carMapper.mapCarToCarDTO(car));
+            }
+            return new ResponseEntity<>(carDTOS, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
